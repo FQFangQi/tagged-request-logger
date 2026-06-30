@@ -164,9 +164,21 @@ export default function Timeline({ showToast }) {
     if (log.type === 'marker') return;
     e.preventDefault();
     e.stopPropagation();
+
+    const panel = document.getElementById('brl-panel-container');
+    if (!panel) return;
+
+    const rect = panel.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    // 边界安全规避：若菜单向下会溢出面板高，向上折算；向右溢出则向左折算
+    const adjustedY = y + 95 > rect.height ? y - 95 : y;
+    const adjustedX = x + 120 > rect.width ? x - 120 : x;
+
     setMenuPos({
-      x: e.clientX,
-      y: e.clientY,
+      x: adjustedX,
+      y: adjustedY,
       show: true,
       log: log
     });
@@ -420,9 +432,9 @@ export default function Timeline({ showToast }) {
       {menuPos.show && (
         <div 
           style={{
-            position: 'fixed',
-            left: menuPos.x,
-            top: menuPos.y,
+            position: 'absolute',
+            left: `${menuPos.x}px`,
+            top: `${menuPos.y}px`,
             background: 'rgba(20, 20, 20, 0.95)',
             backdropFilter: 'blur(10px)',
             border: '1px solid rgba(255, 255, 255, 0.15)',

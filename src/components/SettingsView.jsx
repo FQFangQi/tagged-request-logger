@@ -272,11 +272,28 @@ export default function SettingsView({ onBack, showToast }) {
               <button 
                 className="brl-btn primary" 
                 onClick={() => window.open('https://github.com/FQFangQi/tagged-request-logger/archive/refs/heads/main.zip', '_blank')}
-                style={{ padding: '6px', fontSize: '10px', width: '100%' }}
+                style={{ padding: '6px', fontSize: '10px', width: '100%', marginBottom: '4px' }}
               >
                 {t.btnGetLatestZip}
               </button>
             )}
+            
+            {/* Git 一键更新选项 */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginTop: '6px', borderTop: '1px dashed rgba(255,255,255,0.06)', paddingTop: '6px' }}>
+              <span style={{ fontSize: '10px', color: '#34d399', fontWeight: 'bold' }}>{t.gitUpdatePrompt}</span>
+              <div style={{ display: 'flex', gap: '6px', alignItems: 'center', background: 'rgba(0,0,0,0.25)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '4px', padding: '4px 6px' }}>
+                <code style={{ fontSize: '10px', color: '#38bdf8', fontFamily: 'monospace', flex: 1 }}>git pull</code>
+                <button 
+                  className="brl-btn" 
+                  onClick={() => {
+                    navigator.clipboard.writeText('git pull').then(() => showToast(t.toastCommandCopied));
+                  }}
+                  style={{ width: 'auto', padding: '2px 6px', fontSize: '9px', background: 'rgba(255,255,255,0.08)', borderColor: 'rgba(255,255,255,0.1)' }}
+                >
+                  {t.copyCommand}
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 

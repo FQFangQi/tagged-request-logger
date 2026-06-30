@@ -92,7 +92,10 @@ export const i18n = {
     menuCopyDetails: '📋 Copy Details',
     menuCopyCurl: '🐚 Copy cURL Command',
     menuDeleteLog: '🗑️ Delete Log',
-    toastCopiedCurl: 'Copied cURL command to clipboard!'
+    toastCopiedCurl: 'Copied cURL command to clipboard!',
+    gitUpdatePrompt: 'Git One-click Update (Recommended)',
+    copyCommand: 'Copy',
+    toastCommandCopied: 'Git pull command copied!'
   },
   zh: {
     filterLabel: '过滤 URL 匹配规则',
@@ -187,6 +190,9 @@ export const i18n = {
     menuCopyDetails: '📋 复制日志详情',
     menuCopyCurl: '🐚 复制 cURL 命令',
     menuDeleteLog: '🗑️ 删除此条记录',
-    toastCopiedCurl: '已复制 cURL 命令到剪贴板！'
+    toastCopiedCurl: '已复制 cURL 命令到剪贴板！',
+    gitUpdatePrompt: 'Git 一键更新 (推荐)',
+    copyCommand: '复制',
+    toastCommandCopied: 'Git pull 命令已复制！'
   }
 };

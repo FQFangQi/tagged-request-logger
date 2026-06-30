@@ -1,0 +1,23 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Build / package
+*.zip
+*.crx
+*.pem
+dist/
+build/
+
+# Logs & temp
+*.log
+tmp/
+temp/

@@ -12,21 +12,25 @@
 
 ## 📸 Screenshots (English Version)
 
-<p align="center">
-  <img src="panel_preview_en.png" alt="Main Panel Preview" width="600" />
-</p>
-<p align="center">
-  <img src="settings_preview_en.png" alt="Settings Preview" width="350" />
-</p>
-<p align="center">
-  <img src="ai_copilot_demo_en.png" alt="AI Copilot Demo" width="800" />
-</p>
+To help you get familiar with the tool quickly, here are the core interface previews and workflow descriptions:
 
-| File Name | Recommended Size | Recommended Scene / Content |
-| :--- | :--- | :--- |
-| **`panel_preview_en.png`** | `800 × 500` | The main panel layout in the bottom-right corner of a webpage, showing a list of recorded click events, fetch requests, and JavaScript errors. |
-| **`settings_preview_en.png`** | `400 × 500` | The settings view showing configuration cards for Headers debugging, DOM click tracking, and Error/Console log options with level checkboxes. |
-| **`ai_copilot_demo_en.png`** | `1200 × 600` | Side-by-side view: Left shows the copied structured log output; Right shows pasting the logs into Cursor / Claude / ChatGPT to fix code bugs. |
+#### 1. Main Operation Panel
+<p align="left">
+  <img src="panel_preview_en.png" alt="Main Operation Panel" width="550" />
+</p>
+*The main operation panel docked in the bottom-right corner of a webpage, displaying a real-time sequential log of DOM clicks, intercepted HTTP requests, and JS exceptions. You can tag your steps and export all actions.*
+
+#### 2. Advanced Configuration Settings
+<p align="left">
+  <img src="settings_preview_en.png" alt="Advanced Settings Panel" width="350" />
+</p>
+*By clicking the gear icon in the footer, you can slide into the settings page to configure HTTP header whitelists/blacklists, toggle DOM click attributes, select console levels (Error, Warn, Info, Log), and switch UI languages.*
+
+#### 3. AI Copilot Diagnosis Demo
+<p align="left">
+  <img src="ai_copilot_demo_en.png" alt="AI Diagnosis Demo" width="750" />
+</p>
+*A typical debugging workflow: copy the sequential text output from the panel and paste it directly into Cursor, Claude, or ChatGPT. The AI will immediately analyze the context and pinpoint the bug.*
 
 ---
 
@@ -51,31 +55,31 @@ The extension runs in the **MAIN world** context of the tab, bypassing content s
 
 ```mermaid
 graph TD
-    User([Developer interacts with webpage]) --> ClickEvent[1. DOM Click Event]
-    User --> FetchXHR[2. HTTP Request Fetch/XHR]
-    User --> ConsoleMsg[3. Console Log or Crash Error]
+    User([ Developer interacts with webpage ]) --> ClickEvent[ 1. DOM Click Event ]
+    User --> FetchXHR[ 2. HTTP Request Fetch / XHR ]
+    User --> ConsoleMsg[ 3. Console Log or Crash Error ]
 
     subgraph "MAIN World Context (content.js)"
-        ClickEvent --> ClickTracker[DOM Click Handler]
-        FetchXHR --> HttpInterceptor[Fetch & XHR Interceptor]
-        ConsoleMsg --> ErrorConsoleTracker[JS Error & Console Interceptor]
+        ClickEvent --> ClickTracker[ DOM Click Handler ]
+        FetchXHR --> HttpInterceptor[ Fetch & XHR Interceptor ]
+        ConsoleMsg --> ErrorConsoleTracker[ JS Error & Console Interceptor ]
 
-        ClickTracker --> LoggerState[Sequential Log State state.logs]
+        ClickTracker --> LoggerState[ Sequential Log State state.logs ]
         HttpInterceptor --> LoggerState
         ErrorConsoleTracker --> LoggerState
 
-        ActiveTag{Is a Tag Session active?}
+        ActiveTag{ Is a Tag Session active? }
         LoggerState --> ActiveTag
-        ActiveTag -- Yes --> ApplyTag[Auto-append Current Tag]
-        ActiveTag -- No --> NoTag[Record without tag]
+        ActiveTag -- Yes --> ApplyTag[ Auto-append Current Tag ]
+        ActiveTag -- No --> NoTag[ Record without tag ]
         
-        ApplyTag --> PanelUI[Real-time List View Renderer]
+        ApplyTag --> PanelUI[ Real-time List View Renderer ]
         NoTag --> PanelUI
     end
 
-    PanelUI --> ExportAction[Copy All / Export TXT / Single Item Copy]
-    ExportAction --> AICopilot[Feed to AI Copilot Cursor/Claude/ChatGPT]
-    AICopilot --> DebugResult([AI analyzes bugs and outputs fix code])
+    PanelUI --> ExportAction[ Copy All / Export TXT / Single Item Copy ]
+    ExportAction --> AICopilot[ Feed to AI Copilot Cursor / Claude / ChatGPT ]
+    AICopilot --> DebugResult([ AI analyzes bugs and outputs fix code ])
 ```
 
 ---
@@ -139,6 +143,7 @@ Click `⚙️ Settings` at the bottom right to configure advanced options:
 *   **Error & Console Trackers**:
     *   Toggle global error listener.
     *   Select console logging levels (Error 🔴, Warn 🟡, Info 🔵, Log ⚪).
+*   **Language Setting**: Hot-switch the panel language between English and Chinese (Simplified). The selected setting is instantly persisted and applied without page reload.
 
 ---
 

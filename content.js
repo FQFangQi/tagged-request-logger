@@ -1784,7 +1784,7 @@
             </div>
 
             <div class="brl-btn-row">
-              <button class="brl-btn" id="brl-btn-action-tag">${state.isTagActive ? `⏹ ${t.btnEndTag} [${state.currentTag}]` : `⏺ ${t.btnStartTag}`}</button>
+              <button class="brl-btn" id="brl-btn-action-tag">${state.isTagActive ? `${t.btnEndTag} [${state.currentTag}]` : t.btnStartTag}</button>
             </div>
 
             <!-- 当前事项状态条 -->
@@ -1821,7 +1821,7 @@
             <!-- 返回按钮 -->
             <div style="display: flex; align-items: center; margin-bottom: 4px;">
               <button class="brl-btn-back" id="brl-btn-back-to-main">
-                <span>←</span> ${t.backToMain}
+                ${t.backToMain}
               </button>
             </div>
 
@@ -2147,7 +2147,7 @@
         state.logs.push(markerLog);
 
         // UI 更新
-        btnActionTag.textContent = `⏹ ${tVal.btnEndTag} [${tagName}]`;
+        btnActionTag.textContent = `${tVal.btnEndTag} [${tagName}]`;
         btnActionTag.classList.add('active-tag');
         tagStatusText.textContent = tagName;
         tagStatusBar.style.display = 'flex';
@@ -2169,7 +2169,7 @@
         state.isTagActive = false;
         state.currentTag = '';
         
-        btnActionTag.textContent = `⏺ ${tVal.btnStartTag}`;
+        btnActionTag.textContent = tVal.btnStartTag;
         btnActionTag.classList.remove('active-tag');
         tagStatusBar.style.display = 'none';
         inputTag.disabled = false;

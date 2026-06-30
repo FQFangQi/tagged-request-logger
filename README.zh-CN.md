@@ -12,21 +12,25 @@
 
 ## 📸 界面预览 (中文版截图)
 
-<p align="center">
-  <img src="panel_preview.png" alt="主面板预览" width="600" />
-</p>
-<p align="center">
-  <img src="settings_preview.png" alt="设置面板预览" width="350" />
-</p>
-<p align="center">
-  <img src="ai_copilot_demo.png" alt="AI 提问演示" width="800" />
-</p>
+为了帮助您快速熟悉工具，以下是核心界面的预览和工作流图文介绍：
 
-| 截图命名 | 建议尺寸 | 画面内容推荐 |
-| :--- | :--- | :--- |
-| **`panel_preview.png`** | `800 × 500` | 正常网页中右下角的控制面板主界面，包含若干条点击、请求与报错的时序日志记录，展示最近的捕获状态。 |
-| **`settings_preview.png`** | `400 × 500` | 配置中心展开时的页面，展示 Headers 过滤卡片、点击交互追踪卡片，以及新加入的“异常与控制台追踪”卡片的详细开关与多选级别。 |
-| **`ai_copilot_demo.png`** | `1200 × 600` | 左右对比图：左侧为导出的结构化日志，右侧为黏贴进 Cursor / ChatGPT 中 AI 快速定位 Bug 的对话界面。 |
+#### 1. 主控制操作面板
+<p align="left">
+  <img src="panel_preview.png" alt="主控制操作面板" width="550" />
+</p>
+*该面板静默挂载在网页的右下角，能够以高可视化的时间轴实时呈现您的 DOM 点击交互、网络请求以及 JS 异常报错，便于一键复制打标事项。*
+
+#### 2. 高级配置中心
+<p align="left">
+  <img src="settings_preview.png" alt="高级配置面板" width="350" />
+</p>
+*点击底部齿轮可滑动切入配置页面。您可以在此配置 Headers 白名单/黑名单、控制点击元素路径是否包含 URL/Class、细分过滤控制台日志等级（Error, Warn, Info, Log）并进行多语言切换。*
+
+#### 3. AI 诊断辅助演示
+<p align="left">
+  <img src="ai_copilot_demo.png" alt="AI 协同诊断" width="750" />
+</p>
+*典型调试流演示：将打标后复制出的时序日志直接黏贴进 AI 协同工具（如 Cursor、ChatGPT 等），AI 会瞬间根据时序上下文精准给出修复方案。*
 
 ---
 
@@ -51,31 +55,31 @@
 
 ```mermaid
 graph TD
-    User([开发者操作网页]) --> ClickEvent[1. 触发 DOM 点击]
-    User --> FetchXHR[2. 触发 HTTP 请求]
-    User --> ConsoleMsg[3. 控制台打印/异常报错]
+    User([ 开发者操作网页 ]) --> ClickEvent[ 1. 触发 DOM 点击 ]
+    User --> FetchXHR[ 2. 触发 HTTP 请求 ]
+    User --> ConsoleMsg[ 3. 控制台打印 / 异常报错 ]
 
     subgraph "MAIN World Context (content.js)"
-        ClickEvent --> ClickTracker[DOM 点击监听器]
-        FetchXHR --> HttpInterceptor[Fetch & XHR 拦截器]
-        ConsoleMsg --> ErrorConsoleTracker[JS 错误与 Console 拦截器]
+        ClickEvent --> ClickTracker[ DOM 点击监听器 ]
+        FetchXHR --> HttpInterceptor[ Fetch & XHR 拦截器 ]
+        ConsoleMsg --> ErrorConsoleTracker[ JS 错误与 Console 拦截器 ]
 
-        ClickTracker --> LoggerState[时序日志队列 state.logs]
+        ClickTracker --> LoggerState[ 时序日志队列 state.logs ]
         HttpInterceptor --> LoggerState
         ErrorConsoleTracker --> LoggerState
 
-        ActiveTag{当前是否有激活事项?}
+        ActiveTag{ 当前是否有激活事项? }
         LoggerState --> ActiveTag
-        ActiveTag -- 是 --> ApplyTag[自动追加分类事项 Tag]
-        ActiveTag -- 否 --> NoTag[无 Tag 独立记录]
+        ActiveTag -- 是 --> ApplyTag[ 自动追加分类事项 Tag ]
+        ActiveTag -- 否 --> NoTag[ 无 Tag 独立记录 ]
         
-        ApplyTag --> PanelUI[UI 实时时序列表预览]
+        ApplyTag --> PanelUI[ UI 实时时序列表预览 ]
         NoTag --> PanelUI
     end
 
-    PanelUI --> ExportAction[复制全部/导出 TXT/单条复制]
-    ExportAction --> AICopilot[喂给 AI 助手 Cursor/ChatGPT]
-    AICopilot --> DebugResult([AI 极速定位 Bug / 生成修复代码])
+    PanelUI --> ExportAction[ 复制全部 / 导出 TXT / 单条复制 ]
+    ExportAction --> AICopilot[ 喂给 AI 助手 Cursor / ChatGPT ]
+    AICopilot --> DebugResult([ AI 极速定位 Bug / 生成修复代码 ])
 ```
 
 ---
@@ -139,6 +143,7 @@ graph TD
 *   **异常与控制台配置**：
     *   支持选择性关闭“未捕获页面报错监听”。
     *   支持自定义记录哪些控制台等级日志（默认只记录 Error 和 Warn，避免 Log 级别的喧宾夺主）。
+*   **语言切换配置**：支持在英文（English）和简体中文之间任意热重载切换，配置自动持久化，即时生效。
 
 ---
 

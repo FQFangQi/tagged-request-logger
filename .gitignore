@@ -1,23 +1,13 @@
-# OS
+# 依赖目录
+node_modules/
+
+# 编译与临时产物
+dist/
+*.log
+.eslintcache
+
+# 系统与编辑器缓存
 .DS_Store
 Thumbs.db
-desktop.ini
-
-# Editor / IDE
 .vscode/
 .idea/
-*.swp
-*.swo
-*~
-
-# Build / package
-*.zip
-*.crx
-*.pem
-dist/
-build/
-
-# Logs & temp
-*.log
-tmp/
-temp/

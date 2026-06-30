@@ -49,8 +49,159 @@
       info: false,
       log: false
     },
+    language: 'en',          // 默认英文
     showPanel: true,         // 是否显示面板
     isCollapsed: false       // 面板是否折叠
+  };
+
+  // --- 2. 国际化翻译字典 ---
+  const i18n = {
+    en: {
+      filterLabel: 'Filter URL Pattern',
+      filterPlaceholder: 'e.g. /api/v1 or Regex like /api/v1/',
+      btnPauseListen: '⏸ Pause Listening',
+      btnStartListen: '▶ Start Listening',
+      btnClearData: '🗑 Clear Data',
+      inputTagPlaceholder: 'e.g. create-record, filter-query...',
+      btnStartTag: '⏺ Start Tag',
+      btnEndTag: '⏹ End Tag',
+      tagStatusBarText: 'Recording Tag:',
+      noMatchingLogs: 'No matching records found',
+      btnExportTxt: '📥 Export TXT',
+      btnCopyAll: '📋 Copy All',
+      statusRunning: 'Running',
+      statusPaused: 'Paused',
+      settingsTitle: 'Settings',
+      backToMain: '← Back to Main Panel',
+      headersTitle: 'Headers Debug Filter',
+      keepHeadersLabel: 'Keep Headers (Whitelist)',
+      keepHeadersPlaceholder: 'Comma separated, empty keeps all',
+      excludeHeadersLabel: 'Exclude Headers (Blacklist)',
+      excludeHeadersPlaceholder: 'Comma separated, e.g. cookie',
+      clicksTitle: 'DOM Click Tracking',
+      clicksUrlLabel: 'Record URL during interactions',
+      clicksClassLabel: 'Record Class name during interactions',
+      errorsTitle: 'Errors & Console Tracking',
+      errorsLabel: 'Record unhandled page errors',
+      consoleLabel: 'Record console logs',
+      languageTitle: 'Language / 语言设置',
+      languageLabel: 'Select Language / 选择语言',
+      toastCopied: 'Copied details to clipboard!',
+      toastCopiedAll: 'Copied all logs to clipboard!',
+      toastCopiedRequest: 'Copied request to clipboard!',
+      alertNoLogs: 'No records to copy or export!',
+      alertTagEmpty: 'Please enter a tag name!',
+      // 单个复制的报告文案
+      clickDetailTitle: 'Interaction: Click Element (CLICK)',
+      clickDetailUrl: 'Page URL',
+      clickDetailTag: 'Tag',
+      clickDetailText: 'Visible Text',
+      clickDetailId: 'Element ID',
+      clickDetailClass: 'Class Name',
+      clickDetailSelector: 'Unique CSS Selector Path',
+      clickDetailTime: 'Time',
+      errDetailTitle: 'Exception',
+      errDetailMsg: 'Error Message',
+      errDetailFile: 'File',
+      errDetailLineCol: 'Line/Col',
+      errDetailStack: 'Stack Trace',
+      consoleDetailSrc: 'Console Output',
+      consoleDetailContent: 'Content',
+      reqDetailTitle: 'HTTP Request',
+      reqDetailMethod: 'Method',
+      reqDetailStatus: 'Status Code',
+      reqDetailDuration: 'Duration',
+      reqDetailReqHeaders: 'Request Headers',
+      reqDetailResHeaders: 'Response Headers',
+      reqDetailPayload: 'Request Payload',
+      reqDetailResponse: 'Response',
+      // 全局报告文案
+      reportTitle: 'Tagged Request Logger - Export Report',
+      reportTime: 'Time',
+      reportUrl: 'Page URL',
+      reportFilter: 'Filter Pattern',
+      reportHeaders: 'Include Headers',
+      reportClicks: 'Include Clicks',
+      reportMarkerStart: '--- Tag Started',
+      reportMarkerEnd: '--- Tag Ended',
+      reportRequest: 'Request',
+      reportClick: 'Click',
+      reportError: 'Error',
+      reportConsole: 'Console'
+    },
+    zh: {
+      filterLabel: '过滤 URL 匹配规则',
+      filterPlaceholder: '例如：/typekey/api/v1 或 正则如 /api/v1/',
+      btnPauseListen: '⏸ 暂停监听',
+      btnStartListen: '▶ 开始监听',
+      btnClearData: '🗑 清空数据',
+      inputTagPlaceholder: '例如：创建记录、过滤查询...',
+      btnStartTag: '⏺ 开始事项',
+      btnEndTag: '⏹ 结束事项',
+      tagStatusBarText: '正在记录事项:',
+      noMatchingLogs: '暂无符合条件的请求',
+      btnExportTxt: '📥 导出 TXT',
+      btnCopyAll: '📋 复制全部',
+      statusRunning: '运行中',
+      statusPaused: '已暂停',
+      settingsTitle: '配置',
+      backToMain: '← 返回主面板',
+      headersTitle: 'Headers 调试过滤',
+      keepHeadersLabel: '仅保留 Headers (白名单)',
+      keepHeadersPlaceholder: '用英文逗号分隔，为空保留全部',
+      excludeHeadersLabel: '排除 Headers (黑名单)',
+      excludeHeadersPlaceholder: '用英文逗号分隔，如 cookie',
+      clicksTitle: 'DOM 点击交互追踪',
+      clicksUrlLabel: '交互时记录所处页面 URL',
+      clicksClassLabel: '交互时记录元素类名 (Class)',
+      errorsTitle: '异常与控制台追踪',
+      errorsLabel: '记录未捕获页面报错',
+      consoleLabel: '记录控制台等级日志',
+      languageTitle: 'Language / 语言设置',
+      languageLabel: 'Select Language / 选择语言',
+      toastCopied: '已复制详情到剪贴板！',
+      toastCopiedAll: '已复制完整日志到剪贴板！',
+      toastCopiedRequest: '已复制该请求到剪贴板！',
+      alertNoLogs: '当前没有捕获到任何记录，无法导出！',
+      alertTagEmpty: '请输入事项标记名称！',
+      // 单个复制的报告文案
+      clickDetailTitle: '交互事件: 点击页面元素 (CLICK)',
+      clickDetailUrl: '页面地址',
+      clickDetailTag: '所属事项',
+      clickDetailText: '显示文字',
+      clickDetailId: '元素 ID',
+      clickDetailClass: '元素类名',
+      clickDetailSelector: '唯一 DOM 路径 (CSS Selector)',
+      clickDetailTime: '时间',
+      errDetailTitle: '异常类型',
+      errDetailMsg: '错误内容',
+      errDetailFile: '发生文件',
+      errDetailLineCol: '行列信息',
+      errDetailStack: '堆栈轨迹 (Stack Trace)',
+      consoleDetailSrc: '日志来源',
+      consoleDetailContent: '日志内容',
+      reqDetailTitle: '网络请求',
+      reqDetailMethod: '请求方式',
+      reqDetailStatus: '状态码',
+      reqDetailDuration: '耗时',
+      reqDetailReqHeaders: '请求 Headers',
+      reqDetailResHeaders: '响应 Headers',
+      reqDetailPayload: '请求 Payload',
+      reqDetailResponse: '响应 Response',
+      // 全局报告文案
+      reportTitle: 'Tagged Request Logger - 导出报告',
+      reportTime: '时间',
+      reportUrl: '页面URL',
+      reportFilter: '过滤规则',
+      reportHeaders: '包含Headers',
+      reportClicks: '包含DOM交互',
+      reportMarkerStart: '--- 事项开始',
+      reportMarkerEnd: '--- 事项结束',
+      reportRequest: '请求',
+      reportClick: '交互',
+      reportError: '报错',
+      reportConsole: '控制台'
+    }
   };
 
   // 尝试从 localStorage 恢复配置
@@ -80,6 +231,8 @@
         state.consoleLevels = JSON.parse(savedConsoleLevels);
       } catch (e) {}
     }
+    const savedLanguage = localStorage.getItem('__trl_lang');
+    if (savedLanguage !== null) state.language = savedLanguage;
   } catch (e) {
     console.error('[RequestLogger] 恢复配置失败:', e);
   }
@@ -197,84 +350,85 @@
 
   // 组装完整的报告文本 (供导出与一键复制全部使用)
   function generateLogReport() {
+    const t = i18n[state.language];
     let txt = `============================================================\n`;
-    txt += `Tagged Request Logger - 导出报告\n`;
-    txt += `时间: ${getFormattedTime()}\n`;
-    txt += `页面URL: ${window.location.href}\n`;
-    txt += `过滤规则: ${state.filterPattern || '(无)'}\n`;
-    txt += `包含Headers: ${state.includeHeaders ? '是' : '否'}\n`;
-    txt += `包含DOM交互: ${state.includeClicks ? '是' : '否'}\n`;
+    txt += `${t.reportTitle}\n`;
+    txt += `${t.reportTime}: ${getFormattedTime()}\n`;
+    txt += `${t.reportUrl}: ${window.location.href}\n`;
+    txt += `${t.reportFilter}: ${state.filterPattern || '(None)'}\n`;
+    txt += `${t.reportHeaders}: ${state.includeHeaders ? 'Yes' : 'No'}\n`;
+    txt += `${t.reportClicks}: ${state.includeClicks ? 'Yes' : 'No'}\n`;
     txt += `============================================================\n\n`;
 
     state.logs.forEach((log, index) => {
       if (log.type === 'marker') {
         const timeStr = getFormattedTime(log.timestamp);
         if (log.action === 'start') {
-          txt += `\n--- 事项开始: [${log.text}] (${timeStr}) ---\n\n`;
+          txt += `\n${t.reportMarkerStart}: [${log.text}] (${timeStr}) ---\n\n`;
         } else {
-          txt += `\n--- 事项结束: [${log.text}] (${timeStr}) ---\n\n`;
+          txt += `\n${t.reportMarkerEnd}: [${log.text}] (${timeStr}) ---\n\n`;
         }
       } else if (log.type === 'click') {
         const timeStr = getFormattedTime(log.timestamp);
-        txt += `[交互 ${index + 1}] [鼠标点击]  ${timeStr}\n`;
-        if (log.url) txt += `页面地址: ${log.url}\n`;
-        txt += `标签: ${log.tagName}\n`;
-        txt += `文字: ${log.innerText ? `"${log.innerText}"` : '(无文字)'}\n`;
-        if (log.id) txt += `元素ID: ${log.id}\n`;
-        if (log.className) txt += `类名: ${log.className}\n`;
-        txt += `唯一 Selector 路径: ${log.selector}\n`;
-        if (log.tag) txt += `所属事项: ${log.tag}\n`;
+        txt += `[${t.reportClick} ${index + 1}] [${state.language === 'zh' ? '鼠标点击' : 'Mouse Click'}]  ${timeStr}\n`;
+        if (log.url) txt += `${t.clickDetailUrl}: ${log.url}\n`;
+        txt += `${state.language === 'zh' ? '标签' : 'Tag Name'}: ${log.tagName}\n`;
+        txt += `${t.clickDetailText}: ${log.innerText ? `"${log.innerText}"` : '(None)'}\n`;
+        if (log.id) txt += `${t.clickDetailId}: ${log.id}\n`;
+        if (log.className) txt += `${t.clickDetailClass}: ${log.className}\n`;
+        txt += `${t.clickDetailSelector}: ${log.selector}\n`;
+        if (log.tag) txt += `${t.clickDetailTag}: ${log.tag}\n`;
         txt += `------------------------------------------------------------\n\n`;
       } else if (log.type === 'error') {
         const timeStr = getFormattedTime(log.timestamp);
-        txt += `[报错 ${index + 1}] [JavaScript Error]  ${timeStr}\n`;
-        txt += `错误信息: ${log.message}\n`;
-        txt += `文件: ${log.filename} (Line ${log.lineno}, Col ${log.colno})\n`;
+        txt += `[${t.reportError} ${index + 1}] [JavaScript Error]  ${timeStr}\n`;
+        txt += `${t.errDetailMsg}: ${log.message}\n`;
+        txt += `${t.errDetailFile}: ${log.filename} (Line ${log.lineno}, Col ${log.colno})\n`;
         if (log.stack) {
-          txt += `堆栈:\n${log.stack}\n`;
+          txt += `${t.errDetailStack}:\n${log.stack}\n`;
         }
-        if (log.tag) txt += `所属事项: ${log.tag}\n`;
+        if (log.tag) txt += `${state.language === 'zh' ? '所属事项' : 'Tag'}: ${log.tag}\n`;
         txt += `------------------------------------------------------------\n\n`;
       } else if (log.type === 'promise-error') {
         const timeStr = getFormattedTime(log.timestamp);
-        txt += `[报错 ${index + 1}] [Promise Rejection]  ${timeStr}\n`;
-        txt += `错误信息: ${log.message}\n`;
+        txt += `[${t.reportError} ${index + 1}] [Promise Rejection]  ${timeStr}\n`;
+        txt += `${t.errDetailMsg}: ${log.message}\n`;
         if (log.stack) {
-          txt += `堆栈:\n${log.stack}\n`;
+          txt += `${t.errDetailStack}:\n${log.stack}\n`;
         }
-        if (log.tag) txt += `所属事项: ${log.tag}\n`;
+        if (log.tag) txt += `${state.language === 'zh' ? '所属事项' : 'Tag'}: ${log.tag}\n`;
         txt += `------------------------------------------------------------\n\n`;
       } else if (log.type === 'console') {
         const timeStr = getFormattedTime(log.timestamp);
-        txt += `[控制台 ${index + 1}] [Console ${log.level.toUpperCase()}]  ${timeStr}\n`;
-        txt += `内容: ${log.message}\n`;
-        if (log.tag) txt += `所属事项: ${log.tag}\n`;
+        txt += `[${t.reportConsole} ${index + 1}] [Console ${log.level.toUpperCase()}]  ${timeStr}\n`;
+        txt += `${t.consoleDetailContent}: ${log.message}\n`;
+        if (log.tag) txt += `${state.language === 'zh' ? '所属事项' : 'Tag'}: ${log.tag}\n`;
         txt += `------------------------------------------------------------\n\n`;
       } else if (log.type === 'request') {
         const timeStr = getFormattedTime(log.timestamp);
-        txt += `[请求 ${index + 1}] [${log.tech}]  ${timeStr}\n`;
-        txt += `方法: ${log.method}\n`;
+        txt += `[${t.reportRequest} ${index + 1}] [${log.tech}]  ${timeStr}\n`;
+        txt += `${t.reqDetailMethod}: ${log.method}\n`;
         txt += `URL: ${log.url}\n`;
-        txt += `状态码: ${log.status}\n`;
-        txt += `请求用时: ${log.durationMs !== null ? log.durationMs + 'ms' : '读取中...'}\n`;
+        txt += `${t.reqDetailStatus}: ${log.status}\n`;
+        txt += `${t.reqDetailDuration}: ${log.durationMs !== null ? log.durationMs + 'ms' : 'Reading...'}\n`;
         if (log.tag) {
-          txt += `所属事项: ${log.tag}\n`;
+          txt += `${state.language === 'zh' ? '所属事项' : 'Tag'}: ${log.tag}\n`;
         }
 
         if (state.includeHeaders) {
-          txt += `\n请求 Headers:\n`;
+          txt += `\n${t.reqDetailReqHeaders}:\n`;
           const filteredReq = filterHeaders(log.reqHeaders);
-          txt += filteredReq && Object.keys(filteredReq).length ? JSON.stringify(filteredReq, null, 2) : '(空)';
-          txt += `\n\n响应 Headers:\n`;
+          txt += filteredReq && Object.keys(filteredReq).length ? JSON.stringify(filteredReq, null, 2) : '(None)';
+          txt += `\n\n${t.reqDetailResHeaders}:\n`;
           const filteredRes = filterHeaders(log.resHeaders);
-          txt += filteredRes && Object.keys(filteredRes).length ? JSON.stringify(filteredRes, null, 2) : '(空)';
+          txt += filteredRes && Object.keys(filteredRes).length ? JSON.stringify(filteredRes, null, 2) : '(None)';
           txt += `\n`;
         }
 
-        txt += `\n请求 Payload:\n`;
-        txt += tryFormatJson(log.reqBody) || '(空)';
-        txt += `\n\n响应 Response:\n`;
-        txt += tryFormatJson(log.resBody) || '(空)';
+        txt += `\n${t.reqDetailPayload}:\n`;
+        txt += tryFormatJson(log.reqBody) || '(None)';
+        txt += `\n\n${t.reqDetailResponse}:\n`;
+        txt += tryFormatJson(log.resBody) || '(None)';
         txt += `\n------------------------------------------------------------\n\n`;
       }
     });
@@ -1272,9 +1426,10 @@
   // 更新已捕获请求数与实时预览列表
   function updateUIListCount() {
     if (!btnClear || !miniCount) return;
+    const t = i18n[state.language];
     // 计数：网络请求、报错以及控制台日志的总和
     const totalCount = state.logs.filter(l => l.type === 'request' || l.type === 'error' || l.type === 'promise-error' || l.type === 'console').length;
-    btnClear.textContent = `🗑 清空数据 (${totalCount})`;
+    btnClear.textContent = `${t.btnClearData} (${totalCount})`;
     miniCount.textContent = totalCount;
 
     // 悬浮操作辅助函数
@@ -1284,12 +1439,12 @@
       
       const copyBtn = document.createElement('div');
       copyBtn.className = 'brl-action-icon';
-      copyBtn.title = '复制详情';
+      copyBtn.title = state.language === 'zh' ? '复制详情' : 'Copy Details';
       copyBtn.innerHTML = '📋';
       
       const deleteBtn = document.createElement('div');
       deleteBtn.className = 'brl-action-icon delete-btn';
-      deleteBtn.title = '删除此条记录';
+      deleteBtn.title = state.language === 'zh' ? '删除此条记录' : 'Delete Log';
       deleteBtn.innerHTML = '🗑️';
       
       actionsDiv.appendChild(copyBtn);
@@ -1300,10 +1455,10 @@
         e.stopPropagation();
         const detail = getDetailContent();
         navigator.clipboard.writeText(detail).then(() => {
-          showToast('已复制详情到剪贴板！');
+          showToast(t.toastCopied);
         }).catch(err => {
-          console.error('复制失败:', err);
-          showToast('复制失败，请重试');
+          console.error('Copy failed:', err);
+          showToast(state.language === 'zh' ? '复制失败，请重试' : 'Copy failed, please retry');
         });
       });
 
@@ -1322,7 +1477,7 @@
         .slice(-6);
 
       if (displayLogs.length === 0) {
-        previewList.innerHTML = `<div style="text-align: center; color: #666; padding: 12px; font-size: 11px; font-style: italic;">暂无符合条件的请求</div>`;
+        previewList.innerHTML = `<div style="text-align: center; color: #666; padding: 12px; font-size: 11px; font-style: italic;">${t.noMatchingLogs}</div>`;
         return;
       }
 
@@ -1334,7 +1489,7 @@
         if (log.type === 'marker') {
           row.classList.add('status-marker');
           const timeStr = new Date(log.timestamp).toLocaleTimeString();
-          row.innerHTML = `<div style="flex: 1; text-align: center; font-size: 10px;">${log.action === 'start' ? '▶' : '⏹'} 事项: ${log.text} (${timeStr})</div>`;
+          row.innerHTML = `<div style="flex: 1; text-align: center; font-size: 10px;">${log.action === 'start' ? '▶' : '⏹'} ${state.language === 'zh' ? '事项' : 'Tag'}: ${log.text} (${timeStr})</div>`;
         } else if (log.type === 'click') {
           row.classList.add('status-click');
           const timeStr = new Date(log.timestamp).toLocaleTimeString();
@@ -1354,15 +1509,15 @@
           // 点击单条点击记录复制元素详情
           const getClickDetail = () => {
             let detail = `=========================================\n`;
-            detail += `交互事件: 点击页面元素 (CLICK)\n`;
-            if (log.url) detail += `页面地址: ${log.url}\n`;
-            detail += `元素标签: ${log.tagName}\n`;
-            detail += `显示文字: ${log.innerText ? `"${log.innerText}"` : '(空)'}\n`;
-            if (log.id) detail += `元素 ID: ${log.id}\n`;
-            if (log.className) detail += `元素类名: ${log.className}\n`;
-            detail += `唯一 DOM 路径 (CSS Selector):\n${log.selector}\n`;
-            detail += `时间: ${getFormattedTime(log.timestamp)}\n`;
-            if (log.tag) detail += `所属事项: ${log.tag}\n`;
+            detail += `${t.clickDetailTitle}\n`;
+            if (log.url) detail += `${t.clickDetailUrl}: ${log.url}\n`;
+            detail += `${state.language === 'zh' ? '元素标签' : 'Tag Name'}: ${log.tagName}\n`;
+            detail += `${t.clickDetailText}: ${log.innerText ? `"${log.innerText}"` : '(None)'}\n`;
+            if (log.id) detail += `${t.clickDetailId}: ${log.id}\n`;
+            if (log.className) detail += `${t.clickDetailClass}: ${log.className}\n`;
+            detail += `${t.clickDetailSelector}:\n${log.selector}\n`;
+            detail += `${t.clickDetailTime}: ${getFormattedTime(log.timestamp)}\n`;
+            if (log.tag) detail += `${t.clickDetailTag}: ${log.tag}\n`;
             detail += `=========================================\n`;
             return detail;
           };
@@ -1370,10 +1525,10 @@
           row.addEventListener('click', (e) => {
             e.stopPropagation();
             navigator.clipboard.writeText(getClickDetail()).then(() => {
-              showToast('已复制 DOM 交互详情到剪贴板！');
+              showToast(t.toastCopied);
             }).catch(err => {
-              console.error('复制失败:', err);
-              showToast('复制失败，请重试');
+              console.error('Copy failed:', err);
+              showToast(state.language === 'zh' ? '复制失败，请重试' : 'Copy failed, please retry');
             });
           });
 
@@ -1395,17 +1550,17 @@
 
           const getErrorDetail = () => {
             let detail = `=========================================\n`;
-            detail += `异常类型: ${log.type === 'error' ? 'JavaScript 运行时错误' : '未捕获 Promise 异常'}\n`;
-            detail += `错误内容: ${log.message}\n`;
+            detail += `${t.errDetailTitle}: ${log.type === 'error' ? (state.language === 'zh' ? 'JavaScript 运行时错误' : 'JavaScript Runtime Error') : (state.language === 'zh' ? '未捕获 Promise 异常' : 'Unhandled Promise Rejection')}\n`;
+            detail += `${t.errDetailMsg}: ${log.message}\n`;
             if (log.type === 'error') {
-              detail += `发生文件: ${log.filename}\n`;
-              detail += `行列信息: 行 ${log.lineno}, 列 ${log.colno}\n`;
+              detail += `${t.errDetailFile}: ${log.filename}\n`;
+              detail += `${state.language === 'zh' ? '行列信息' : 'Line/Col'}: ${state.language === 'zh' ? '行 ' : 'Line '}${log.lineno}, ${state.language === 'zh' ? '列 ' : 'Col '}${log.colno}\n`;
             }
             if (log.stack) {
-              detail += `\n堆栈轨迹 (Stack Trace):\n${log.stack}\n`;
+              detail += `\n${t.errDetailStack}:\n${log.stack}\n`;
             }
-            detail += `时间: ${getFormattedTime(log.timestamp)}\n`;
-            if (log.tag) detail += `所属事项: ${log.tag}\n`;
+            detail += `${t.clickDetailTime}: ${getFormattedTime(log.timestamp)}\n`;
+            if (log.tag) detail += `${t.clickDetailTag}: ${log.tag}\n`;
             detail += `=========================================\n`;
             return detail;
           };
@@ -1413,10 +1568,10 @@
           row.addEventListener('click', (e) => {
             e.stopPropagation();
             navigator.clipboard.writeText(getErrorDetail()).then(() => {
-              showToast('已复制报错详情与堆栈！');
+              showToast(t.toastCopied);
             }).catch(err => {
-              console.error('复制失败:', err);
-              showToast('复制失败，请重试');
+              console.error('Copy failed:', err);
+              showToast(state.language === 'zh' ? '复制失败，请重试' : 'Copy failed, please retry');
             });
           });
 
@@ -1455,10 +1610,10 @@
 
           const getConsoleDetail = () => {
             let detail = `=========================================\n`;
-            detail += `日志来源: 控制台输出 (Console.${log.level})\n`;
-            detail += `日志内容: ${log.message}\n`;
-            detail += `时间: ${getFormattedTime(log.timestamp)}\n`;
-            if (log.tag) detail += `所属事项: ${log.tag}\n`;
+            detail += `${t.consoleDetailSrc}: ${state.language === 'zh' ? '控制台输出' : 'Console Output'} (Console.${log.level})\n`;
+            detail += `${t.consoleDetailContent}: ${log.message}\n`;
+            detail += `${state.language === 'zh' ? '时间' : 'Time'}: ${getFormattedTime(log.timestamp)}\n`;
+            if (log.tag) detail += `${state.language === 'zh' ? '所属事项' : 'Tag'}: ${log.tag}\n`;
             detail += `=========================================\n`;
             return detail;
           };
@@ -1466,10 +1621,10 @@
           row.addEventListener('click', (e) => {
             e.stopPropagation();
             navigator.clipboard.writeText(getConsoleDetail()).then(() => {
-              showToast('已复制控制台日志内容！');
+              showToast(t.toastCopied);
             }).catch(err => {
-              console.error('复制失败:', err);
-              showToast('复制失败，请重试');
+              console.error('Copy failed:', err);
+              showToast(state.language === 'zh' ? '复制失败，请重试' : 'Copy failed, please retry');
             });
           });
 
@@ -1494,7 +1649,7 @@
             displayPath = displayPath.slice(0, 10) + '...' + displayPath.slice(-15);
           }
 
-          const durationText = log.durationMs !== null ? `${log.durationMs}ms` : '读取中';
+          const durationText = log.durationMs !== null ? `${log.durationMs}ms` : 'Reading...';
           const methodClass = `brl-method-${log.method.toLowerCase()}`;
 
           row.innerHTML = `
@@ -1508,27 +1663,27 @@
 
           const getRequestDetail = () => {
             let detail = `=========================================\n`;
-            detail += `请求方式: ${log.method}\n`;
-            detail += `请求 URL: ${log.url}\n`;
-            detail += `状态码: ${log.status}\n`;
-            detail += `耗时: ${log.durationMs !== null ? log.durationMs + 'ms' : '未知'}\n`;
-            detail += `时间: ${getFormattedTime(log.timestamp)}\n`;
-            if (log.tag) detail += `所属事项: ${log.tag}\n`;
+            detail += `${t.reqDetailMethod}: ${log.method}\n`;
+            detail += `URL: ${log.url}\n`;
+            detail += `${t.reqDetailStatus}: ${log.status}\n`;
+            detail += `${t.reqDetailDuration}: ${log.durationMs !== null ? log.durationMs + 'ms' : 'Unknown'}\n`;
+            detail += `${state.language === 'zh' ? '时间' : 'Time'}: ${getFormattedTime(log.timestamp)}\n`;
+            if (log.tag) detail += `${state.language === 'zh' ? '所属事项' : 'Tag'}: ${log.tag}\n`;
             
             if (state.includeHeaders) {
-              detail += `\n请求 Headers:\n`;
+              detail += `\n${t.reqDetailReqHeaders}:\n`;
               const filteredReq = filterHeaders(log.reqHeaders);
-              detail += filteredReq && Object.keys(filteredReq).length ? JSON.stringify(filteredReq, null, 2) : '(空)';
-              detail += `\n\n响应 Headers:\n`;
+              detail += filteredReq && Object.keys(filteredReq).length ? JSON.stringify(filteredReq, null, 2) : '(None)';
+              detail += `\n\n${t.reqDetailResHeaders}:\n`;
               const filteredRes = filterHeaders(log.resHeaders);
-              detail += filteredRes && Object.keys(filteredRes).length ? JSON.stringify(filteredRes, null, 2) : '(空)';
+              detail += filteredRes && Object.keys(filteredRes).length ? JSON.stringify(filteredRes, null, 2) : '(None)';
               detail += `\n`;
             }
 
-            detail += `\n请求 Payload:\n`;
-            detail += tryFormatJson(log.reqBody) || '(空)';
-            detail += `\n\n响应 Response:\n`;
-            detail += tryFormatJson(log.resBody) || '(空)';
+            detail += `\n${t.reqDetailPayload}:\n`;
+            detail += tryFormatJson(log.reqBody) || '(None)';
+            detail += `\n\n${t.reqDetailResponse}:\n`;
+            detail += tryFormatJson(log.resBody) || '(None)';
             detail += `\n=========================================\n`;
             return detail;
           };
@@ -1537,10 +1692,10 @@
           row.addEventListener('click', (e) => {
             e.stopPropagation();
             navigator.clipboard.writeText(getRequestDetail()).then(() => {
-              showToast('已复制该请求到剪贴板！');
+              showToast(t.toastCopiedRequest);
             }).catch(err => {
-              console.error('复制失败:', err);
-              showToast('复制失败，请重试');
+              console.error('Copy failed:', err);
+              showToast(state.language === 'zh' ? '复制失败，请重试' : 'Copy failed, please retry');
             });
           });
 
@@ -1571,10 +1726,16 @@
   }
 
   function initUI() {
-    // 1. 创建并插入样式
-    const styleEl = document.createElement('style');
-    styleEl.textContent = styleText;
-    (document.head || document.documentElement).appendChild(styleEl);
+    const t = i18n[state.language];
+
+    // 1. 创建并插入样式（防重复挂载）
+    let styleEl = document.getElementById('brl-panel-styles');
+    if (!styleEl) {
+      styleEl = document.createElement('style');
+      styleEl.id = 'brl-panel-styles';
+      styleEl.textContent = styleText;
+      (document.head || document.documentElement).appendChild(styleEl);
+    }
 
     // 2. 创建面板容器
     panel = document.createElement('div');
@@ -1593,8 +1754,8 @@
           <span>Tagged Logger</span>
         </div>
         <div class="brl-header-ops">
-          <button class="brl-icon-btn" id="brl-btn-collapse" title="折叠面板">➖</button>
-          <button class="brl-icon-btn" id="brl-btn-close" title="彻底关闭" style="margin-left: 6px;">❌</button>
+          <button class="brl-icon-btn" id="brl-btn-collapse" title="${state.language === 'zh' ? '折叠面板' : 'Collapse Panel'}">➖</button>
+          <button class="brl-icon-btn" id="brl-btn-close" title="${state.language === 'zh' ? '彻底关闭' : 'Close Panel'}" style="margin-left: 6px;">❌</button>
         </div>
       </div>
 
@@ -1606,52 +1767,52 @@
           <div id="brl-view-main">
             <!-- 过滤规则 -->
             <div class="brl-field-group">
-              <div class="brl-label">过滤 URL 匹配规则</div>
-              <input type="text" class="brl-input" id="brl-input-filter" value="${state.filterPattern}" placeholder="例如：/typekey/api/v1 或 正则如 /api/v1/" />
+              <div class="brl-label">${t.filterLabel}</div>
+              <input type="text" class="brl-input" id="brl-input-filter" value="${state.filterPattern}" placeholder="${t.filterPlaceholder}" />
             </div>
 
             <!-- 状态控制按钮 -->
             <div class="brl-btn-row">
-              <button class="brl-btn" id="brl-btn-toggle-listen">⏸ 暂停监听</button>
-              <button class="brl-btn danger" id="brl-btn-clear">🗑 清空数据 (0)</button>
+              <button class="brl-btn" id="brl-btn-toggle-listen">${state.isListening ? t.btnPauseListen : t.btnStartListen}</button>
+              <button class="brl-btn danger" id="brl-btn-clear">${t.btnClearData} (0)</button>
             </div>
 
             <!-- 打标区 -->
             <div class="brl-field-group" style="margin-top: 2px;">
-              <div class="brl-label">当前步骤/事项标记</div>
-              <input type="text" class="brl-input" id="brl-input-tag" placeholder="例如：创建记录、过滤查询..." />
+              <div class="brl-label">${t.filterLabel.replace('URL 匹配规则', '数据来源').replace('URL Pattern', 'Step Tag')}</div>
+              <input type="text" class="brl-input" id="brl-input-tag" placeholder="${t.inputTagPlaceholder}" />
             </div>
 
             <div class="brl-btn-row">
-              <button class="brl-btn" id="brl-btn-action-tag">⏺ 开始事项</button>
+              <button class="brl-btn" id="brl-btn-action-tag">${state.isTagActive ? `⏹ ${t.btnEndTag} [${state.currentTag}]` : `⏺ ${t.btnStartTag}`}</button>
             </div>
 
             <!-- 当前事项状态条 -->
-            <div class="brl-tag-status-bar" id="brl-tag-status" style="display: none;">
-              <span>正在记录事项: <span id="brl-current-tag-text">创建记录</span></span>
+            <div class="brl-tag-status-bar" id="brl-tag-status" style="${state.isTagActive ? 'display: flex;' : 'display: none;'}">
+              <span>${t.tagStatusBarText} <span id="brl-current-tag-text">${state.currentTag}</span></span>
             </div>
 
             <!-- 实时预览区 -->
             <div class="brl-field-group" style="margin-top: 2px;">
-              <div class="brl-label">最近捕获请求与交互 (点击复制)</div>
+              <div class="brl-label">${state.language === 'zh' ? '最近捕获请求与交互 (点击复制)' : 'Recent Logs (Click to copy)'}</div>
               <div id="brl-preview-list">
-                <div style="text-align: center; color: #666; padding: 12px; font-size: 11px; font-style: italic;">暂无符合条件的请求</div>
+                <div style="text-align: center; color: #666; padding: 12px; font-size: 11px; font-style: italic;">${t.noMatchingLogs}</div>
               </div>
             </div>
 
             <!-- 导出与复制双按钮行 -->
             <div class="brl-btn-row" style="margin-top: 2px;">
-              <button class="brl-btn primary" id="brl-btn-export" style="padding: 9px 10px;">📥 导出 TXT</button>
-              <button class="brl-btn" id="brl-btn-copy-all" style="padding: 9px 10px; background: rgba(59, 130, 246, 0.15); border-color: rgba(59, 130, 246, 0.3); color: #93c5fd;">📋 复制全部</button>
+              <button class="brl-btn primary" id="brl-btn-export" style="padding: 9px 10px;">${t.btnExportTxt}</button>
+              <button class="brl-btn" id="brl-btn-copy-all" style="padding: 9px 10px; background: rgba(59, 130, 246, 0.15); border-color: rgba(59, 130, 246, 0.3); color: #93c5fd;">${t.btnCopyAll}</button>
             </div>
             
             <!-- 精美极简状态脚部 -->
             <div class="brl-footer" style="margin: 0 -12px -12px -12px; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
               <div style="display: flex; align-items: center; gap: 6px;">
-                <span id="brl-status-dot" class="brl-indicator pulse"></span>
-                <span id="brl-status-text" style="font-size: 11px; color: #aaa;">运行中</span>
+                <span id="brl-status-dot" class="brl-indicator ${state.isListening ? 'pulse' : 'paused'}"></span>
+                <span id="brl-status-text" style="font-size: 11px; color: #aaa;">${state.isListening ? t.statusRunning : t.statusPaused}</span>
               </div>
-              <button id="brl-btn-go-settings" class="brl-icon-btn" title="配置中心">⚙️ 配置</button>
+              <button id="brl-btn-go-settings" class="brl-icon-btn" title="${t.settingsTitle}">⚙️ ${t.settingsTitle}</button>
             </div>
           </div>
 
@@ -1660,7 +1821,7 @@
             <!-- 返回按钮 -->
             <div style="display: flex; align-items: center; margin-bottom: 4px;">
               <button class="brl-btn-back" id="brl-btn-back-to-main">
-                <span>←</span> 返回主面板
+                <span>←</span> ${t.backToMain}
               </button>
             </div>
 
@@ -1669,7 +1830,7 @@
               <!-- 卡片 1: Headers 调试开关 & 配置 -->
               <div class="brl-settings-card">
                 <div class="brl-settings-card-header">
-                  <span class="brl-settings-card-title">Headers 调试过滤</span>
+                  <span class="brl-settings-card-title">${t.headersTitle}</span>
                   <label class="brl-switch">
                     <input type="checkbox" id="brl-cb-headers" ${state.includeHeaders ? 'checked' : ''} />
                     <span class="brl-slider"></span>
@@ -1679,12 +1840,12 @@
                 <!-- 卡片内部展开字段 -->
                 <div id="brl-headers-sub-sec" style="${state.includeHeaders ? 'display: flex;' : 'display: none;'} flex-direction: column; gap: 8px; margin-top: 10px; border-top: 1px dashed rgba(255,255,255,0.08); padding-top: 8px;">
                   <div class="brl-field-group">
-                    <div class="brl-label" style="color: #34d399;">仅保留 Headers (白名单)</div>
-                    <input type="text" class="brl-input" id="brl-input-headers-keep" value="${state.headersKeepPattern}" placeholder="用英文逗号分隔，为空保留全部" />
+                    <div class="brl-label" style="color: #34d399;">${t.keepHeadersLabel}</div>
+                    <input type="text" class="brl-input" id="brl-input-headers-keep" value="${state.headersKeepPattern}" placeholder="${t.keepHeadersPlaceholder}" />
                   </div>
                   <div class="brl-field-group">
-                    <div class="brl-label" style="color: #f87171;">排除 Headers (黑名单)</div>
-                    <input type="text" class="brl-input" id="brl-input-headers-exclude" value="${state.headersExcludePattern}" placeholder="用英文逗号分隔，如 cookie" />
+                    <div class="brl-label" style="color: #f87171;">${t.excludeHeadersLabel}</div>
+                    <input type="text" class="brl-input" id="brl-input-headers-exclude" value="${state.headersExcludePattern}" placeholder="${t.excludeHeadersPlaceholder}" />
                   </div>
                 </div>
               </div>
@@ -1692,7 +1853,7 @@
               <!-- 卡片 2: 点击交互配置 -->
               <div class="brl-settings-card">
                 <div class="brl-settings-card-header">
-                  <span class="brl-settings-card-title">DOM 点击交互追踪</span>
+                  <span class="brl-settings-card-title">${t.clicksTitle}</span>
                   <label class="brl-switch">
                     <input type="checkbox" id="brl-cb-clicks" ${state.includeClicks ? 'checked' : ''} />
                     <span class="brl-slider"></span>
@@ -1704,12 +1865,12 @@
                   <label class="brl-custom-cb">
                     <input type="checkbox" id="brl-cb-click-url" ${state.clickIncludeUrl ? 'checked' : ''} />
                     <span class="brl-checkbox-box"></span>
-                    <span style="color: #93c5fd; font-weight: 500;">交互时记录所处页面 URL</span>
+                    <span style="color: #93c5fd; font-weight: 500;">${t.clicksUrlLabel}</span>
                   </label>
                   <label class="brl-custom-cb">
                     <input type="checkbox" id="brl-cb-click-class" ${state.clickIncludeClass ? 'checked' : ''} />
                     <span class="brl-checkbox-box"></span>
-                    <span style="color: #fbbf24; font-weight: 500;">交互时记录元素类名 (Class)</span>
+                    <span style="color: #fbbf24; font-weight: 500;">${t.clicksClassLabel}</span>
                   </label>
                 </div>
               </div>
@@ -1717,20 +1878,20 @@
               <!-- 卡片 3: 异常与控制台日志追踪 -->
               <div class="brl-settings-card">
                 <div class="brl-settings-card-header">
-                  <span class="brl-settings-card-title">异常与控制台追踪</span>
+                  <span class="brl-settings-card-title">${t.errorsTitle}</span>
                 </div>
                 
                 <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px; border-top: 1px dashed rgba(255,255,255,0.08); padding-top: 8px;">
                   <label class="brl-custom-cb">
                     <input type="checkbox" id="brl-cb-errors" ${state.includeErrors ? 'checked' : ''} />
                     <span class="brl-checkbox-box"></span>
-                    <span style="color: #f87171; font-weight: 500;">记录未捕获页面报错</span>
+                    <span style="color: #f87171; font-weight: 500;">${t.errorsLabel}</span>
                   </label>
                   
                   <label class="brl-custom-cb" style="margin-top: 4px;">
                     <input type="checkbox" id="brl-cb-console" ${state.includeConsole ? 'checked' : ''} />
                     <span class="brl-checkbox-box"></span>
-                    <span style="color: #93c5fd; font-weight: 500;">记录控制台等级日志</span>
+                    <span style="color: #93c5fd; font-weight: 500;">${t.consoleLabel}</span>
                   </label>
                   
                   <!-- 控制台等级细分选择 -->
@@ -1759,6 +1920,23 @@
                 </div>
               </div>
 
+              <!-- 卡片 4: 语言设置 -->
+              <div class="brl-settings-card">
+                <div class="brl-settings-card-header">
+                  <span class="brl-settings-card-title">${t.languageTitle}</span>
+                </div>
+                
+                <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px; border-top: 1px dashed rgba(255,255,255,0.08); padding-top: 8px;">
+                  <div class="brl-field-group">
+                    <div class="brl-label">${t.languageLabel}</div>
+                    <select class="brl-input" id="brl-select-lang" style="background: rgba(20, 20, 20, 0.85); color: #fff; border: 1px solid rgba(255, 255, 255, 0.15); cursor: pointer; padding: 4px 6px;">
+                      <option value="en" ${state.language === 'en' ? 'selected' : ''}>English</option>
+                      <option value="zh" ${state.language === 'zh' ? 'selected' : ''}>中文 (Chinese)</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
 
@@ -1766,7 +1944,7 @@
       </div>
       
       <!-- Toast 提示 (容器级浮出) -->
-      <div id="brl-toast">已复制该请求到剪贴板！</div>
+      <div id="brl-toast">${t.toastCopied}</div>
     `;
 
     document.body.appendChild(panel);
@@ -1792,6 +1970,7 @@
     cbConsoleWarn = document.getElementById('brl-cb-console-warn');
     cbConsoleInfo = document.getElementById('brl-cb-console-info');
     cbConsoleLog = document.getElementById('brl-cb-console-log');
+    const selectLang = document.getElementById('brl-select-lang');
     const consoleSubSec = document.getElementById('brl-console-sub-sec');
     statusText = document.getElementById('brl-status-text');
     statusDot = document.getElementById('brl-status-dot');
@@ -1819,8 +1998,8 @@
     });
 
     btnCollapse.addEventListener('click', (e) => {
-      setCollapsed(true);
       e.stopPropagation();
+      setCollapsed(true);
     });
 
     const btnClose = document.getElementById('brl-btn-close');
@@ -1845,16 +2024,17 @@
     // 开始/暂停监听
     btnToggleListen.addEventListener('click', () => {
       state.isListening = !state.isListening;
+      const tVal = i18n[state.language];
       if (state.isListening) {
-        btnToggleListen.textContent = '⏸ 暂停监听';
+        btnToggleListen.textContent = tVal.btnPauseListen;
         indicator.className = 'brl-indicator pulse';
         statusDot.className = 'brl-indicator pulse';
-        statusText.textContent = '运行中';
+        statusText.textContent = tVal.statusRunning;
       } else {
-        btnToggleListen.textContent = '▶ 开始监听';
+        btnToggleListen.textContent = tVal.btnStartListen;
         indicator.className = 'brl-indicator paused';
         statusDot.className = 'brl-indicator paused';
-        statusText.textContent = '已暂停';
+        statusText.textContent = tVal.statusPaused;
       }
     });
 
@@ -1933,13 +2113,25 @@
       localStorage.setItem('__trl_headers_exclude', state.headersExcludePattern);
     });
 
+    // 绑定语言切换事件
+    selectLang.addEventListener('change', () => {
+      const selectedLang = selectLang.value;
+      state.language = selectedLang;
+      localStorage.setItem('__trl_lang', selectedLang);
+      
+      // 热重载 UI 面板以切换语言
+      panel.remove();
+      initUI();
+    });
+
     // 事项打标操作
     btnActionTag.addEventListener('click', () => {
+      const tVal = i18n[state.language];
       if (!state.isTagActive) {
         // 开启事项
         const tagName = inputTag.value.trim();
         if (!tagName) {
-          alert('请输入事项标记名称！');
+          alert(tVal.alertTagEmpty);
           return;
         }
         state.currentTag = tagName;
@@ -1955,7 +2147,7 @@
         state.logs.push(markerLog);
 
         // UI 更新
-        btnActionTag.textContent = `⏹ 结束事项 [${tagName}]`;
+        btnActionTag.textContent = `⏹ ${tVal.btnEndTag} [${tagName}]`;
         btnActionTag.classList.add('active-tag');
         tagStatusText.textContent = tagName;
         tagStatusBar.style.display = 'flex';
@@ -1977,7 +2169,7 @@
         state.isTagActive = false;
         state.currentTag = '';
         
-        btnActionTag.textContent = `⏺ 开始事项`;
+        btnActionTag.textContent = `⏺ ${tVal.btnStartTag}`;
         btnActionTag.classList.remove('active-tag');
         tagStatusBar.style.display = 'none';
         inputTag.disabled = false;
@@ -1987,8 +2179,9 @@
 
     // 导出文本为 TXT
     btnExport.addEventListener('click', () => {
+      const tVal = i18n[state.language];
       if (state.logs.length === 0) {
-        alert('当前没有捕获到任何记录，无法导出！');
+        alert(tVal.alertNoLogs);
         return;
       }
 
@@ -2023,17 +2216,18 @@
 
     // 一键复制全部日志至剪贴板
     btnCopyAll.addEventListener('click', () => {
+      const tVal = i18n[state.language];
       if (state.logs.length === 0) {
-        alert('当前没有捕获到任何记录，无法复制！');
+        alert(tVal.alertNoLogs);
         return;
       }
 
       const txt = generateLogReport();
       navigator.clipboard.writeText(txt).then(() => {
-        showToast('已复制完整日志到剪贴板！');
+        showToast(tVal.toastCopiedAll);
       }).catch(err => {
-        console.error('复制失败:', err);
-        showToast('复制失败，请重试');
+        console.error('Copy failed:', err);
+        showToast(state.language === 'zh' ? '复制失败，请重试' : 'Copy failed, please retry');
       });
     });
 

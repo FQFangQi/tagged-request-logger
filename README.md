@@ -12,8 +12,15 @@
 
 ## 📸 Screenshots (English Version)
 
-> [!NOTE]
-> We look forward to your screenshots (English version) to make this document complete. Please name the image files as described below and place them in the root directory.
+<p align="center">
+  <img src="panel_preview_en.png" alt="Main Panel Preview" width="600" />
+</p>
+<p align="center">
+  <img src="settings_preview_en.png" alt="Settings Preview" width="350" />
+</p>
+<p align="center">
+  <img src="ai_copilot_demo_en.png" alt="AI Copilot Demo" width="800" />
+</p>
 
 | File Name | Recommended Size | Recommended Scene / Content |
 | :--- | :--- | :--- |
@@ -48,7 +55,7 @@ graph TD
     User --> FetchXHR[2. HTTP Request Fetch/XHR]
     User --> ConsoleMsg[3. Console Log or Crash Error]
 
-    subgraph MAIN World Context (content.js)
+    subgraph "MAIN World Context (content.js)"
         ClickEvent --> ClickTracker[DOM Click Handler]
         FetchXHR --> HttpInterceptor[Fetch & XHR Interceptor]
         ConsoleMsg --> ErrorConsoleTracker[JS Error & Console Interceptor]

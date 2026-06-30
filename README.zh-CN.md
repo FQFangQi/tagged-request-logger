@@ -12,8 +12,15 @@
 
 ## 📸 界面预览 (中文版截图)
 
-> [!NOTE]
-> 期待您提供以下建议的插件运行截图（中文版），以使文档表现更佳。截图准备好后，您可以将其命名并存入根目录。
+<p align="center">
+  <img src="panel_preview.png" alt="主面板预览" width="600" />
+</p>
+<p align="center">
+  <img src="settings_preview.png" alt="设置面板预览" width="350" />
+</p>
+<p align="center">
+  <img src="ai_copilot_demo.png" alt="AI 提问演示" width="800" />
+</p>
 
 | 截图命名 | 建议尺寸 | 画面内容推荐 |
 | :--- | :--- | :--- |
@@ -48,7 +55,7 @@ graph TD
     User --> FetchXHR[2. 触发 HTTP 请求]
     User --> ConsoleMsg[3. 控制台打印/异常报错]
 
-    subgraph MAIN World Context (content.js)
+    subgraph "MAIN World Context (content.js)"
         ClickEvent --> ClickTracker[DOM 点击监听器]
         FetchXHR --> HttpInterceptor[Fetch & XHR 拦截器]
         ConsoleMsg --> ErrorConsoleTracker[JS 错误与 Console 拦截器]

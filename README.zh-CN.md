@@ -16,19 +16,19 @@
 
 #### 1. 主控制操作面板
 <p align="left">
-  <img src="panel_preview.png" alt="主控制操作面板" width="550" />
+  <img src="src/assets/panel_preview.png" alt="主控制操作面板" width="550" />
 </p>
 *该面板静默挂载在网页的右下角，能够以高可视化的时间轴实时呈现您的 DOM 点击交互、网络请求以及 JS 异常报错，便于一键复制打标事项。*
 
 #### 2. 高级配置中心
 <p align="left">
-  <img src="settings_preview.png" alt="高级配置面板" width="350" />
+  <img src="src/assets/settings_preview.png" alt="高级配置面板" width="350" />
 </p>
 *点击底部齿轮可滑动切入配置页面。您可以在此配置 Headers 白名单/黑名单、控制点击元素路径是否包含 URL/Class、细分过滤控制台日志等级（Error, Warn, Info, Log）并进行多语言切换。*
 
 #### 3. AI 诊断辅助演示
 <p align="left">
-  <img src="ai_copilot_demo.png" alt="AI 协同诊断" width="750" />
+  <img src="src/assets/ai_copilot_demo.png" alt="AI 协同诊断" width="750" />
 </p>
 *典型调试流演示：将打标后复制出的时序日志直接黏贴进 AI 协同工具（如 Cursor、ChatGPT 等），AI 会瞬间根据时序上下文精准给出修复方案。*
 

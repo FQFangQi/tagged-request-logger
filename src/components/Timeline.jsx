@@ -3,7 +3,7 @@ import { useLoggerState } from '../hooks/useLoggerState';
 import { i18n } from '../i18n';
 import { getFormattedTime, tryFormatJson, filterHeaders } from '../interceptors/network';
 import { state } from '../state';
-import { CopyIcon, TrashIcon } from './Icons';
+import { CopyIcon, TrashIcon, TerminalIcon } from './Icons';
 
 // 将请求序列化为 cURL 命令的函数
 export function generateCurlCommand(log) {
@@ -169,10 +169,9 @@ export default function Timeline({ showToast }) {
     if (!panel) return;
 
     const rect = panel.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const x = e.clientX - rect.left + 2;
+    const y = e.clientY - rect.top + 2;
 
-    // 边界安全规避：若菜单向下会溢出面板高，向上折算；向右溢出则向左折算
     const adjustedY = y + 95 > rect.height ? y - 95 : y;
     const adjustedX = x + 120 > rect.width ? x - 120 : x;
 
@@ -454,8 +453,10 @@ export default function Timeline({ showToast }) {
               handleRowClick(menuPos.log);
               setMenuPos(prev => ({ ...prev, show: false }));
             }}
+            style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
           >
-            {t.menuCopyDetails}
+            <CopyIcon size={11} style={{ opacity: 0.8 }} />
+            <span>{t.menuCopyDetails.replace(/^[^\w\u4e00-\u9fa5\s]+\s*/, '')}</span>
           </div>
           {menuPos.log.type === 'request' && (
             <div 
@@ -465,8 +466,10 @@ export default function Timeline({ showToast }) {
                 copyToClipboard(curlCmd, t.toastCopiedCurl);
                 setMenuPos(prev => ({ ...prev, show: false }));
               }}
+              style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
             >
-              {t.menuCopyCurl}
+              <TerminalIcon size={11} style={{ opacity: 0.8, color: '#38bdf8' }} />
+              <span>{t.menuCopyCurl.replace(/^[^\w\u4e00-\u9fa5\s]+\s*/, '')}</span>
             </div>
           )}
           <div style={{ height: '1px', background: 'rgba(255, 255, 255, 0.08)', margin: '4px 0' }} />
@@ -479,8 +482,10 @@ export default function Timeline({ showToast }) {
               }
               setMenuPos(prev => ({ ...prev, show: false }));
             }}
+            style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
           >
-            {t.menuDeleteLog}
+            <TrashIcon size={11} style={{ opacity: 0.8, color: '#f87171' }} />
+            <span>{t.menuDeleteLog.replace(/^[^\w\u4e00-\u9fa5\s]+\s*/, '')}</span>
           </div>
         </div>
       )}

@@ -16,19 +16,19 @@ To help you get familiar with the tool quickly, here are the core interface prev
 
 #### 1. Main Operation Panel
 <p align="left">
-  <img src="panel_preview_en.png" alt="Main Operation Panel" width="550" />
+  <img src="src/assets/panel_preview_en.png" alt="Main Operation Panel" width="550" />
 </p>
 *The main operation panel docked in the bottom-right corner of a webpage, displaying a real-time sequential log of DOM clicks, intercepted HTTP requests, and JS exceptions. You can tag your steps and export all actions.*
 
 #### 2. Advanced Configuration Settings
 <p align="left">
-  <img src="settings_preview_en.png" alt="Advanced Settings Panel" width="350" />
+  <img src="src/assets/settings_preview_en.png" alt="Advanced Settings Panel" width="350" />
 </p>
 *By clicking the gear icon in the footer, you can slide into the settings page to configure HTTP header whitelists/blacklists, toggle DOM click attributes, select console levels (Error, Warn, Info, Log), and switch UI languages.*
 
 #### 3. AI Copilot Diagnosis Demo
 <p align="left">
-  <img src="ai_copilot_demo_en.png" alt="AI Diagnosis Demo" width="750" />
+  <img src="src/assets/ai_copilot_demo_en.png" alt="AI Diagnosis Demo" width="750" />
 </p>
 *A typical debugging workflow: copy the sequential text output from the panel and paste it directly into Cursor, Claude, or ChatGPT. The AI will immediately analyze the context and pinpoint the bug.*
 

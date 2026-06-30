@@ -39,30 +39,64 @@ export default function App() {
     }
   }, []);
 
-  // 监听折叠/展开状态，在从折叠悬浮球展开时强制进行安全边界限位校验
+  // 监听折叠/展开状态，在状态切换时执行智能的“象限重定位与边界自适应算法”
   useEffect(() => {
-    if (!isCollapsed && panelRef.current) {
-      const leftStr = panelRef.current.style.left;
-      const topStr = panelRef.current.style.top;
+    if (!panelRef.current) return;
+    
+    const leftStr = panelRef.current.style.left;
+    const topStr = panelRef.current.style.top;
+    if (!leftStr || !topStr) return;
+    
+    const left = parseInt(leftStr, 10);
+    const top = parseInt(topStr, 10);
+    
+    if (!isCollapsed) {
+      // 1. 折叠 -> 展开：避免大卡片超出屏幕
+      let newLeft = left;
+      let newTop = top;
       
-      if (leftStr && topStr) {
-        const left = parseInt(leftStr, 10);
-        const top = parseInt(topStr, 10);
-        
-        // 展开后的面板尺寸：宽度 340px，最大预估高度 480px
-        const maxLeft = window.innerWidth - 340 - 10;
-        const maxTop = window.innerHeight - 480 - 10;
-        
-        const newLeft = Math.max(10, Math.min(left, maxLeft));
-        const newTop = Math.max(10, Math.min(top, maxTop));
-        
-        if (newLeft !== left || newTop !== top) {
-          panelRef.current.style.left = `${newLeft}px`;
-          panelRef.current.style.top = `${newTop}px`;
-          localStorage.setItem('__trl_panel_left', newLeft);
-          localStorage.setItem('__trl_panel_top', newTop);
-        }
+      // 若悬浮球在右半侧，展开大卡片时向左延伸（让右边缘对齐）
+      if (left > window.innerWidth / 2) {
+        newLeft = left - (340 - 50);
       }
+      // 若悬浮球在下半侧，展开大卡片时向上延伸（让底边缘对齐）
+      if (top > window.innerHeight / 2) {
+        newTop = top - (480 - 50);
+      }
+      
+      // 安全硬限位
+      const maxLeft = window.innerWidth - 340 - 10;
+      const maxTop = window.innerHeight - 480 - 10;
+      newLeft = Math.max(10, Math.min(newLeft, maxLeft));
+      newTop = Math.max(10, Math.min(newTop, maxTop));
+      
+      panelRef.current.style.left = `${newLeft}px`;
+      panelRef.current.style.top = `${newTop}px`;
+      localStorage.setItem('__trl_panel_left', newLeft);
+      localStorage.setItem('__trl_panel_top', newTop);
+    } else {
+      // 2. 展开 -> 折叠：小悬浮球顺滑缩回到展开面板对应的舒适边缘
+      let ballLeft = left;
+      let ballTop = top;
+      
+      // 若面板在右半侧，折叠后的小球应该留在面板的右侧
+      if (left > window.innerWidth / 2) {
+        ballLeft = left + (340 - 50);
+      }
+      // 若面板在下半侧，折叠后的小球应该留在面板的底侧
+      if (top > window.innerHeight / 2) {
+        const realHeight = panelRef.current.offsetHeight || 480;
+        ballTop = top + (realHeight - 50);
+      }
+      
+      // 安全硬限位
+      ballLeft = Math.max(10, Math.min(ballLeft, window.innerWidth - 50 - 10));
+      ballTop = Math.max(10, Math.min(ballTop, window.innerHeight - 50 - 10));
+      
+      panelRef.current.style.left = `${ballLeft}px`;
+      panelRef.current.style.top = `${ballTop}px`;
+      localStorage.setItem('__trl_panel_left', ballLeft);
+      localStorage.setItem('__trl_panel_top', ballTop);
     }
   }, [isCollapsed]);
 

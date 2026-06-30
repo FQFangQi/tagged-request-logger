@@ -39,6 +39,33 @@ export default function App() {
     }
   }, []);
 
+  // 监听折叠/展开状态，在从折叠悬浮球展开时强制进行安全边界限位校验
+  useEffect(() => {
+    if (!isCollapsed && panelRef.current) {
+      const leftStr = panelRef.current.style.left;
+      const topStr = panelRef.current.style.top;
+      
+      if (leftStr && topStr) {
+        const left = parseInt(leftStr, 10);
+        const top = parseInt(topStr, 10);
+        
+        // 展开后的面板尺寸：宽度 340px，最大预估高度 480px
+        const maxLeft = window.innerWidth - 340 - 10;
+        const maxTop = window.innerHeight - 480 - 10;
+        
+        const newLeft = Math.max(10, Math.min(left, maxLeft));
+        const newTop = Math.max(10, Math.min(top, maxTop));
+        
+        if (newLeft !== left || newTop !== top) {
+          panelRef.current.style.left = `${newLeft}px`;
+          panelRef.current.style.top = `${newTop}px`;
+          localStorage.setItem('__trl_panel_left', newLeft);
+          localStorage.setItem('__trl_panel_top', newTop);
+        }
+      }
+    }
+  }, [isCollapsed]);
+
   if (!isVisible) return null;
 
   const triggerToast = (msg) => {

@@ -21,7 +21,7 @@ export const state = {
   language: 'en',
   isCollapsed: false,
   isVisible: true,
-  version: '1.0.1',
+  version: '1.0.2',
   listeners: new Set(),
 
   subscribe(listener) {

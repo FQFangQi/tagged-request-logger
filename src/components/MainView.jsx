@@ -4,6 +4,7 @@ import { i18n } from '../i18n';
 import { state } from '../state';
 import { getFormattedTime, tryFormatJson, filterHeaders } from '../interceptors/network';
 import Timeline from './Timeline';
+import { PlayIcon, PauseIcon, TrashIcon, CopyIcon, ExportIcon } from './Icons';
 
 export default function MainView({ onGoSettings, showToast }) {
   const {
@@ -200,10 +201,12 @@ export default function MainView({ onGoSettings, showToast }) {
       {/* 启动与清除操作行 */}
       <div className="brl-btn-row">
         <button className="brl-btn" onClick={handleToggleListen}>
-          {isListening ? t.btnPauseListen : t.btnStartListen}
+          {isListening ? <PauseIcon size={12} /> : <PlayIcon size={12} />}
+          <span>{isListening ? t.btnPauseListen.replace(/^[⏸▶]\s*/, '') : t.btnStartListen.replace(/^[⏸▶]\s*/, '')}</span>
         </button>
         <button className="brl-btn danger" onClick={handleClearData}>
-          {t.btnClearData}
+          <TrashIcon size={12} />
+          <span>{t.btnClearData.replace(/^\S+\s*/, '')}</span>
         </button>
       </div>
 
@@ -245,10 +248,12 @@ export default function MainView({ onGoSettings, showToast }) {
       {/* 底部功能性导出栏 */}
       <div className="brl-btn-row">
         <button className="brl-btn" onClick={handleExportTxt}>
-          {t.btnExportTxt}
+          <ExportIcon size={12} />
+          <span>{t.btnExportTxt.replace(/^\S+\s*/, '')}</span>
         </button>
         <button className="brl-btn primary" onClick={handleCopyAll}>
-          {t.btnCopyAll}
+          <CopyIcon size={12} />
+          <span>{t.btnCopyAll.replace(/^\S+\s*/, '')}</span>
         </button>
       </div>
     </div>

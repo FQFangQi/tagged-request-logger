@@ -20,6 +20,7 @@ export const state = {
   },
   language: 'en',
   isCollapsed: false,
+  isVisible: true,
   listeners: new Set(),
 
   subscribe(listener) {

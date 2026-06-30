@@ -56,17 +56,6 @@ export default function SettingsView({ onBack, showToast }) {
 
   return (
     <div id="brl-view-settings">
-      {/* 返回按钮 */}
-      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '4px' }}>
-        <button className="brl-btn-back" onClick={onBack}>
-          {t.backToMain}
-        </button>
-      </div>
-
-      {/* GitHub 链接 */}
-      <button className="brl-github-btn" onClick={() => window.open('https://github.com/FQFangQi/tagged-request-logger', '_blank')}>
-        {t.githubBtn}
-      </button>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxHeight: '350px', overflowY: 'auto', paddingRight: '4px' }}>
         

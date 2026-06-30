@@ -3,6 +3,7 @@ import { useLoggerState } from '../hooks/useLoggerState';
 import { i18n } from '../i18n';
 import { getFormattedTime, tryFormatJson, filterHeaders } from '../interceptors/network';
 import { state } from '../state';
+import { CopyIcon, TrashIcon } from './Icons';
 
 export default function Timeline({ showToast }) {
   const { logs, language, includeHeaders } = useLoggerState();
@@ -148,7 +149,7 @@ export default function Timeline({ showToast }) {
                   title={language === 'zh' ? '删除此条记录' : 'Delete Log'}
                   onClick={(e) => handleDelete(index, e)}
                 >
-                  🗑️
+                  <TrashIcon size={12} />
                 </div>
               </div>
             </div>
@@ -180,14 +181,14 @@ export default function Timeline({ showToast }) {
                   title={language === 'zh' ? '复制详情' : 'Copy Details'}
                   onClick={(e) => { e.stopPropagation(); copyToClipboard(getLogDetailText(log), t.toastCopied); }}
                 >
-                  📋
+                  <CopyIcon size={12} />
                 </div>
                 <div 
                   className="brl-action-icon delete-btn" 
                   title={language === 'zh' ? '删除此条记录' : 'Delete Log'}
                   onClick={(e) => handleDelete(index, e)}
                 >
-                  🗑️
+                  <TrashIcon size={12} />
                 </div>
               </div>
             </div>
@@ -218,14 +219,14 @@ export default function Timeline({ showToast }) {
                   title={language === 'zh' ? '复制详情' : 'Copy Details'}
                   onClick={(e) => { e.stopPropagation(); copyToClipboard(getLogDetailText(log), t.toastCopied); }}
                 >
-                  📋
+                  <CopyIcon size={12} />
                 </div>
                 <div 
                   className="brl-action-icon delete-btn" 
                   title={language === 'zh' ? '删除此条记录' : 'Delete Log'}
                   onClick={(e) => handleDelete(index, e)}
                 >
-                  🗑️
+                  <TrashIcon size={12} />
                 </div>
               </div>
             </div>
@@ -275,14 +276,14 @@ export default function Timeline({ showToast }) {
                   title={language === 'zh' ? '复制详情' : 'Copy Details'}
                   onClick={(e) => { e.stopPropagation(); copyToClipboard(getLogDetailText(log), t.toastCopied); }}
                 >
-                  📋
+                  <CopyIcon size={12} />
                 </div>
                 <div 
                   className="brl-action-icon delete-btn" 
                   title={language === 'zh' ? '删除此条记录' : 'Delete Log'}
                   onClick={(e) => handleDelete(index, e)}
                 >
-                  🗑️
+                  <TrashIcon size={12} />
                 </div>
               </div>
             </div>
@@ -326,14 +327,14 @@ export default function Timeline({ showToast }) {
                   title={language === 'zh' ? '复制详情' : 'Copy Details'}
                   onClick={(e) => { e.stopPropagation(); copyToClipboard(getLogDetailText(log), t.toastCopiedRequest); }}
                 >
-                  📋
+                  <CopyIcon size={12} />
                 </div>
                 <div 
                   className="brl-action-icon delete-btn" 
                   title={language === 'zh' ? '删除此条记录' : 'Delete Log'}
                   onClick={(e) => handleDelete(index, e)}
                 >
-                  🗑️
+                  <TrashIcon size={12} />
                 </div>
               </div>
             </div>

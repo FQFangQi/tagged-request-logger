@@ -4,9 +4,10 @@ import { i18n } from './i18n';
 import { state } from './state';
 import MainView from './components/MainView';
 import SettingsView from './components/SettingsView';
+import { GithubIcon, SettingsIcon, CollapseIcon, CloseIcon, BackIcon } from './components/Icons';
 
 export default function App() {
-  const { isListening, logs, language, isCollapsed } = useLoggerState();
+  const { isListening, logs, language, isCollapsed, isVisible } = useLoggerState();
   const t = i18n[language];
 
   const [activeView, setActiveView] = useState('main'); // 'main' 或 'settings'
@@ -37,6 +38,8 @@ export default function App() {
       }
     }
   }, []);
+
+  if (!isVisible) return null;
 
   const triggerToast = (msg) => {
     if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
@@ -133,8 +136,20 @@ export default function App() {
               <span className={`brl-indicator ${isListening ? 'pulse' : 'paused'}`}></span>
               <span>Tagged Logger</span>
             </div>
-            <div className="brl-header-ops">
-              {/* 前往配置 */}
+            <div className="brl-header-ops" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              {/* GitHub 快速跳转图标 */}
+              <button
+                className="brl-icon-btn"
+                title={t.githubBtn}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  window.open('https://github.com/FQFangQi/tagged-request-logger', '_blank');
+                }}
+              >
+                <GithubIcon size={14} />
+              </button>
+
+              {/* 前往配置 / 返回 */}
               {activeView === 'main' ? (
                 <button
                   id="brl-btn-go-settings"
@@ -145,20 +160,21 @@ export default function App() {
                     setActiveView('settings');
                   }}
                 >
-                  ⚙️
+                  <SettingsIcon size={14} />
                 </button>
               ) : (
                 <button
                   className="brl-icon-btn"
+                  title={t.backToMain}
                   onClick={(e) => {
                     e.stopPropagation();
                     setActiveView('main');
                   }}
-                  style={{ fontSize: '11px', fontWeight: 'bold' }}
                 >
-                  {t.backToMain}
+                  <BackIcon size={14} />
                 </button>
               )}
+
               {/* 折叠面板 */}
               <button
                 id="brl-btn-collapse"
@@ -168,9 +184,21 @@ export default function App() {
                   e.stopPropagation();
                   state.update(s => { s.isCollapsed = true; });
                 }}
-                style={{ fontSize: '14px' }}
               >
-                ⊙
+                <CollapseIcon size={14} />
+              </button>
+
+              {/* 关闭面板 */}
+              <button
+                className="brl-icon-btn"
+                title="Close"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  state.update(s => { s.isVisible = false; });
+                }}
+                style={{ color: '#ef4444' }}
+              >
+                <CloseIcon size={14} />
               </button>
             </div>
           </div>
@@ -185,14 +213,19 @@ export default function App() {
                 transform: activeView === 'settings' ? 'translateX(-340px)' : 'translateX(0)'
               }}
             >
-              <MainView
-                onGoSettings={() => setActiveView('settings')}
-                showToast={triggerToast}
-              />
-              <SettingsView
-                onBack={() => setActiveView('main')}
-                showToast={triggerToast}
-              />
+              {/* 完美契合高度自适应：非当前 active 视图容器的高度重置为 0，防止撑开空白 */}
+              <div style={{ width: 340, flexShrink: 0, height: activeView === 'settings' ? 0 : 'auto', overflow: 'hidden' }}>
+                <MainView
+                  onGoSettings={() => setActiveView('settings')}
+                  showToast={triggerToast}
+                />
+              </div>
+              <div style={{ width: 340, flexShrink: 0, height: activeView === 'main' ? 0 : 'auto', overflow: 'hidden' }}>
+                <SettingsView
+                  onBack={() => setActiveView('main')}
+                  showToast={triggerToast}
+                />
+              </div>
             </div>
           </div>
         )}
@@ -200,7 +233,9 @@ export default function App() {
         {/* 迷你态下的悬浮球内容 */}
         {isCollapsed && (
           <>
-            <div className="brl-ball-icon">🏷️</div>
+            <div className="brl-ball-icon">
+              <GithubIcon size={18} />
+            </div>
             {logs.length > 0 && (
               <div className="brl-mini-dot">
                 {logs.length > 99 ? '99+' : logs.length}

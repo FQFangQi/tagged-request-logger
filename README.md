@@ -144,6 +144,9 @@ Click `⚙️ Settings` at the bottom right to configure advanced options:
     *   Toggle global error listener.
     *   Select console logging levels (Error 🔴, Warn 🟡, Info 🔵, Log ⚪).
 *   **Language Setting**: Hot-switch the panel language between English and Chinese (Simplified). The selected setting is instantly persisted and applied without page reload.
+*   **GitHub Redirection**: Click the GitHub button at the top of settings to easily navigate back to this repository for feedback or updates.
+*   **Workflow Guide (Timeline)**: A beautiful step-by-step CSS-based vertical timeline built right into the Settings panel for quick start guidance.
+*   **Update Check & Manual Sync**: An interactive version checking block. It fetches the latest package version directly from GitHub raw files, handles browser CORS/CSP security restrictions gracefully, and provides a one-click download for manual updates.
 
 ---
 

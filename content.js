@@ -127,7 +127,25 @@
       reportRequest: 'Request',
       reportClick: 'Click',
       reportError: 'Error',
-      reportConsole: 'Console'
+      reportConsole: 'Console',
+      githubBtn: '🐱 Visit GitHub Repository',
+      howToUseTitle: '💡 How to Use (Workflow)',
+      step1Title: '1. Set Tag',
+      step1Desc: 'Enter a task name and click "Start Tag" to begin recording.',
+      step2Title: '2. Perform Actions',
+      step2Desc: 'Interact with your page (clicks, requests, logs will be tracked).',
+      step3Title: '3. Copy / Export',
+      step3Desc: 'Click "Copy All" or "Export TXT" to get the sequential logs.',
+      step4Title: '4. Feed to AI',
+      step4Desc: 'Paste logs directly into Cursor/ChatGPT for instant debugging.',
+      versionTitle: '🚀 Version & Update',
+      currentVersionLabel: 'Current Version',
+      btnCheckUpdate: '🔄 Check Update',
+      updateChecking: 'Checking...',
+      updateLatest: 'You are up to date! 💚',
+      updateAvailable: 'New version available! 🔴',
+      updateErr: 'CSP blocked raw fetch. Click to check manual update.',
+      btnGetLatestZip: '📥 Download Latest ZIP'
     },
     zh: {
       filterLabel: '过滤 URL 匹配规则',
@@ -200,7 +218,25 @@
       reportRequest: '请求',
       reportClick: '交互',
       reportError: '报错',
-      reportConsole: '控制台'
+      reportConsole: '控制台',
+      githubBtn: '🐱 访问 GitHub 项目仓库',
+      howToUseTitle: '💡 快速使用指南 (工作流)',
+      step1Title: '1. 打标启动',
+      step1Desc: '输入任务/步骤名称，点击“开始事项”以启动会话录制。',
+      step2Title: '2. 网页操作',
+      step2Desc: '在网页上进行常规操作，交互、请求和报错将被顺序记录。',
+      step3Title: '3. 复制导出',
+      step3Desc: '点击“复制全部”或“导出 TXT”获取完整的高保真日志。',
+      step4Title: '4. 投喂给 AI',
+      step4Desc: '将日志粘贴进 Cursor/ChatGPT 中，AI 会快速精准解决 Bug。',
+      versionTitle: '🚀 版本与同步更新',
+      currentVersionLabel: '当前版本',
+      btnCheckUpdate: '🔄 检查新版本',
+      updateChecking: '检查中...',
+      updateLatest: '已是最新版本！💚',
+      updateAvailable: '发现新版本！🔴',
+      updateErr: '因网络或安全策略限制，请前往仓库手动下载最新包。',
+      btnGetLatestZip: '📥 立即下载最新 Zip 压缩包'
     }
   };
 
@@ -1085,6 +1121,7 @@
 
     .brl-switch input:checked + .brl-slider {
       background-color: #10b981;
+      box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
     }
 
     .brl-switch input:checked + .brl-slider:before {
@@ -1121,6 +1158,7 @@
     .brl-custom-cb input:checked + .brl-checkbox-box {
       background: #10b981;
       border-color: #10b981;
+      box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
     }
 
     .brl-checkbox-box:after {
@@ -1138,14 +1176,100 @@
       display: block;
     }
 
-    /* 设置页面的精美卡片布局 */
+    /* 设置页面的精美卡片布局 (玻璃拟态 Glassmorphism) */
     .brl-settings-card {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.07);
-      border-radius: 10px;
-      padding: 10px 12px;
+      background: rgba(30, 41, 59, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 12px 14px;
       display: flex;
       flex-direction: column;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(10px);
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+
+    .brl-settings-card:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+    }
+
+    /* GitHub 按钮样式 */
+    .brl-github-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 9px;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #24292e, #1a1e22);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .brl-github-btn:hover {
+      background: linear-gradient(135deg, #2f363d, #24292e);
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-1px);
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.15);
+    }
+
+    .brl-github-btn:active {
+      transform: translateY(1px);
+    }
+
+    /* 垂直步骤时间轴样式 */
+    .brl-timeline {
+      position: relative;
+      padding-left: 20px;
+      margin: 8px 0 4px 10px;
+      border-left: 2px dashed rgba(255, 255, 255, 0.12);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .brl-timeline-item {
+      position: relative;
+      text-align: left;
+    }
+
+    .brl-timeline-dot {
+      position: absolute;
+      left: -27px;
+      top: 2px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #10b981, #059669);
+      border: 2px solid #1e293b;
+      box-shadow: 0 0 6px rgba(16, 185, 129, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    .brl-timeline-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 2px;
+    }
+
+    .brl-timeline-desc {
+      font-size: 10px;
+      color: #aaa;
+      line-height: 1.3;
     }
 
     .brl-settings-card-header {
@@ -1825,7 +1949,12 @@
               </button>
             </div>
 
-            <div style="display: flex; flex-direction: column; gap: 12px; max-height: 380px; overflow-y: auto; padding-right: 4px;">
+            <!-- GitHub 链接 -->
+            <button class="brl-github-btn" id="brl-btn-github">
+              ${t.githubBtn}
+            </button>
+
+            <div style="display: flex; flex-direction: column; gap: 12px; max-height: 350px; overflow-y: auto; padding-right: 4px;">
               
               <!-- 卡片 1: Headers 调试开关 & 配置 -->
               <div class="brl-settings-card">
@@ -1937,6 +2066,53 @@
                 </div>
               </div>
 
+              <!-- 卡片 5: 可视化使用说明 (垂直时间轴) -->
+              <div class="brl-settings-card">
+                <div class="brl-settings-card-header">
+                  <span class="brl-settings-card-title">${t.howToUseTitle}</span>
+                </div>
+                <div style="margin-top: 10px; border-top: 1px dashed rgba(255,255,255,0.08); padding-top: 8px;">
+                  <div class="brl-timeline">
+                    <div class="brl-timeline-item">
+                      <div class="brl-timeline-dot">1</div>
+                      <div class="brl-timeline-title">${t.step1Title}</div>
+                      <div class="brl-timeline-desc">${t.step1Desc}</div>
+                    </div>
+                    <div class="brl-timeline-item">
+                      <div class="brl-timeline-dot">2</div>
+                      <div class="brl-timeline-title">${t.step2Title}</div>
+                      <div class="brl-timeline-desc">${t.step2Desc}</div>
+                    </div>
+                    <div class="brl-timeline-item">
+                      <div class="brl-timeline-dot">3</div>
+                      <div class="brl-timeline-title">${t.step3Title}</div>
+                      <div class="brl-timeline-desc">${t.step3Desc}</div>
+                    </div>
+                    <div class="brl-timeline-item">
+                      <div class="brl-timeline-dot">4</div>
+                      <div class="brl-timeline-title">${t.step4Title}</div>
+                      <div class="brl-timeline-desc">${t.step4Desc}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 卡片 6: 版本与更新 -->
+              <div class="brl-settings-card">
+                <div class="brl-settings-card-header">
+                  <span class="brl-settings-card-title">${t.versionTitle}</span>
+                  <span style="font-size: 10px; color: #888; font-family: monospace;">v1.0.0</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px; border-top: 1px dashed rgba(255,255,255,0.08); padding-top: 8px;">
+                  <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <span style="font-size: 11px; color: #aaa;">${t.currentVersionLabel}: v1.0.0</span>
+                    <button class="brl-btn" id="brl-btn-check-update" style="padding: 4px 8px; font-size: 10px; width: auto; background: rgba(59, 130, 246, 0.15); border-color: rgba(59, 130, 246, 0.3); color: #93c5fd;">${t.btnCheckUpdate}</button>
+                  </div>
+                  <div id="brl-update-status" style="font-size: 10px; line-height: 1.4; display: none;"></div>
+                  <button class="brl-btn primary" id="brl-btn-download-zip" style="padding: 6px; font-size: 10px; width: 100%; display: none;">${t.btnGetLatestZip}</button>
+                </div>
+              </div>
+
             </div>
           </div>
 
@@ -1971,6 +2147,10 @@
     cbConsoleInfo = document.getElementById('brl-cb-console-info');
     cbConsoleLog = document.getElementById('brl-cb-console-log');
     const selectLang = document.getElementById('brl-select-lang');
+    const btnGithub = document.getElementById('brl-btn-github');
+    const btnCheckUpdate = document.getElementById('brl-btn-check-update');
+    const btnDownloadZip = document.getElementById('brl-btn-download-zip');
+    const updateStatusDiv = document.getElementById('brl-update-status');
     const consoleSubSec = document.getElementById('brl-console-sub-sec');
     statusText = document.getElementById('brl-status-text');
     statusDot = document.getElementById('brl-status-dot');
@@ -2019,6 +2199,49 @@
     btnBackToMain.addEventListener('click', (e) => {
       e.stopPropagation();
       sliderWrapper.style.transform = 'translateX(0)';
+    });
+
+    // 社交与更新相关的绑定
+    btnGithub.addEventListener('click', (e) => {
+      e.stopPropagation();
+      window.open('https://github.com/FQFangQi/tagged-request-logger', '_blank');
+    });
+
+    btnCheckUpdate.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const tVal = i18n[state.language];
+      updateStatusDiv.style.display = 'block';
+      updateStatusDiv.style.color = '#93c5fd';
+      updateStatusDiv.textContent = tVal.updateChecking;
+      btnDownloadZip.style.display = 'none';
+
+      try {
+        const res = await fetch('https://raw.githubusercontent.com/FQFangQi/tagged-request-logger/main/manifest.json', { cache: 'no-store' });
+        if (!res.ok) throw new Error('CORS or network error');
+        
+        const data = await res.json();
+        const onlineVersion = data.version;
+        const localVersion = '1.0.0';
+
+        if (onlineVersion !== localVersion) {
+          updateStatusDiv.style.color = '#f87171';
+          updateStatusDiv.textContent = `${tVal.updateAvailable} (v${localVersion} -> v${onlineVersion})`;
+          btnDownloadZip.style.display = 'block';
+        } else {
+          updateStatusDiv.style.color = '#34d399';
+          updateStatusDiv.textContent = tVal.updateLatest;
+        }
+      } catch (err) {
+        console.warn('[RequestLogger] Check update block by CORS/CSP:', err);
+        updateStatusDiv.style.color = '#fbbf24';
+        updateStatusDiv.textContent = tVal.updateErr;
+        btnDownloadZip.style.display = 'block';
+      }
+    });
+
+    btnDownloadZip.addEventListener('click', (e) => {
+      e.stopPropagation();
+      window.open('https://github.com/FQFangQi/tagged-request-logger/archive/refs/heads/main.zip', '_blank');
     });
 
     // 开始/暂停监听

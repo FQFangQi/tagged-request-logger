@@ -706,3 +706,24 @@
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
+
+/* 自定义右键菜单项样式 */
+.brl-menu-item {
+  padding: 6px 12px;
+  font-size: 11px;
+  color: #ccc;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s, color 0.15s;
+}
+.brl-menu-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+.brl-menu-item.danger {
+  color: #fca5a5;
+}
+.brl-menu-item.danger:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #fff;
+}

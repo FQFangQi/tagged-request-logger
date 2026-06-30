@@ -132,10 +132,23 @@ export default function App() {
         {/* 展开态下的 Header 面板 */}
         {!isCollapsed && (
           <div id="brl-panel-header" onMouseDown={handleDragStart}>
-            <div className="brl-title">
-              <span className={`brl-indicator ${isListening ? 'pulse' : 'paused'}`}></span>
-              <span>Tagged Logger</span>
-            </div>
+            {activeView === 'main' ? (
+              <div className="brl-title">
+                <span className={`brl-indicator ${isListening ? 'pulse' : 'paused'}`}></span>
+                <span>Tagged Logger</span>
+              </div>
+            ) : (
+              <div 
+                className="brl-title" 
+                onClick={(e) => { e.stopPropagation(); setActiveView('main'); }}
+                style={{ cursor: 'pointer', transition: 'color 0.15s' }}
+                onMouseEnter={(e) => e.currentTarget.style.color = '#fff'}
+                onMouseLeave={(e) => e.currentTarget.style.color = '#e0e0e0'}
+              >
+                <BackIcon size={12} style={{ marginRight: '4px', verticalAlign: 'middle' }} />
+                <span style={{ fontSize: '12px', fontWeight: 600 }}>{t.settingsTitle}</span>
+              </div>
+            )}
             <div className="brl-header-ops" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               {/* GitHub 快速跳转图标 */}
               <button
@@ -149,8 +162,8 @@ export default function App() {
                 <GithubIcon size={14} />
               </button>
 
-              {/* 前往配置 / 返回 */}
-              {activeView === 'main' ? (
+              {/* 前往配置 (只在主面板状态显示，配置态下已退回左侧返回标题) */}
+              {activeView === 'main' && (
                 <button
                   id="brl-btn-go-settings"
                   className="brl-icon-btn"
@@ -161,17 +174,6 @@ export default function App() {
                   }}
                 >
                   <SettingsIcon size={14} />
-                </button>
-              ) : (
-                <button
-                  className="brl-icon-btn"
-                  title={t.backToMain}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setActiveView('main');
-                  }}
-                >
-                  <BackIcon size={14} />
                 </button>
               )}
 

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Tagged Request Logger",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "基于分类打标的网页网络请求及点击交互时序监听器 (开发与调试利器)",
   "icons": {
     "128": "icon.png"

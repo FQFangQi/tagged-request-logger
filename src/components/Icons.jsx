@@ -42,8 +42,7 @@ export const SettingsIcon = (props) => (
 
 export const CollapseIcon = (props) => (
   <IconWrapper {...props}>
-    <circle cx="12" cy="12" r="10" />
-    <circle cx="12" cy="12" r="3" />
+    <line x1="5" y1="12" x2="19" y2="12" />
   </IconWrapper>
 );
 

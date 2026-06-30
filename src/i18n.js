@@ -88,7 +88,11 @@ export const i18n = {
     updateLatest: 'You are up to date! 💚',
     updateAvailable: 'New version available! 🔴',
     updateErr: 'CSP blocked raw fetch. Click to check manual update.',
-    btnGetLatestZip: '📥 Download Latest ZIP'
+    btnGetLatestZip: '📥 Download Latest ZIP',
+    menuCopyDetails: '📋 Copy Details',
+    menuCopyCurl: '🐚 Copy cURL Command',
+    menuDeleteLog: '🗑️ Delete Log',
+    toastCopiedCurl: 'Copied cURL command to clipboard!'
   },
   zh: {
     filterLabel: '过滤 URL 匹配规则',
@@ -179,6 +183,10 @@ export const i18n = {
     updateLatest: '已是最新版本！💚',
     updateAvailable: '发现新版本！🔴',
     updateErr: '因网络或安全策略限制，请前往仓库手动下载最新包。',
-    btnGetLatestZip: '📥 立即下载最新 Zip 压缩包'
+    btnGetLatestZip: '📥 立即下载最新 Zip 压缩包',
+    menuCopyDetails: '📋 复制日志详情',
+    menuCopyCurl: '🐚 复制 cURL 命令',
+    menuDeleteLog: '🗑️ 删除此条记录',
+    toastCopiedCurl: '已复制 cURL 命令到剪贴板！'
   }
 };

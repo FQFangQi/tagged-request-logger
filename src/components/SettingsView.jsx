@@ -7,6 +7,7 @@ import WorkflowGuide from './WorkflowGuide';
 export default function SettingsView({ onBack, showToast }) {
   const {
     language,
+    version,
     includeHeaders,
     headersKeepPattern,
     headersExcludePattern,
@@ -36,7 +37,7 @@ export default function SettingsView({ onBack, showToast }) {
 
       const data = await res.json();
       const onlineVersion = data.version;
-      const localVersion = '1.0.0';
+      const localVersion = version;
 
       if (onlineVersion !== localVersion) {
         setUpdateColor('#f87171');
@@ -249,11 +250,11 @@ export default function SettingsView({ onBack, showToast }) {
         <div className="brl-settings-card">
           <div className="brl-settings-card-header">
             <span className="brl-settings-card-title">{t.versionTitle}</span>
-            <span style={{ fontSize: '10px', color: '#888', fontFamily: 'monospace' }}>v1.0.0</span>
+            <span style={{ fontSize: '10px', color: '#888', fontFamily: 'monospace' }}>v{version}</span>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '10px', borderTop: '1px dashed rgba(255,255,255,0.08)', paddingTop: '8px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span style={{ fontSize: '11px', color: '#aaa' }}>{t.currentVersionLabel}: v1.0.0</span>
+              <span style={{ fontSize: '11px', color: '#aaa' }}>{t.currentVersionLabel}: v{version}</span>
               <button 
                 className="brl-btn" 
                 onClick={handleUpdateCheck}

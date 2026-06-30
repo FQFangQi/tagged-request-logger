@@ -14,11 +14,9 @@
     const host = window.location.hostname;
     // 1. 本地任何端口 (如 localhost:8000, 9000, 3000)
     if (host === 'localhost' || host === '127.0.0.1') return true;
-    // 2. 线上带有特定关键字的测试/生产环境
-    if (host.includes('tyrion') || host.includes('basil')) return true;
-    // 3. 局域网开发 IP (192.168.x.x, 10.x.x.x, 172.16.x.x ~ 172.31.x.x)
+    // 2. 局域网开发 IP (192.168.x.x, 10.x.x.x, 172.16.x.x ~ 172.31.x.x)
     if (/^(192\.168\.|10\.|172\.(1[6-9]|2[0-9]|3[0-1])\.)/.test(host)) return true;
-    // 4. 地址栏参数强制启用 (任意页面后加 ?__enable_logger=true 即可激活)
+    // 3. 地址栏参数强制启用 (任意页面后加 ?__enable_logger=true 即可激活)
     if (window.location.search.includes('__enable_logger=true')) return true;
     
     return false;
@@ -43,6 +41,14 @@
     includeClicks: true,     // 是否记录 DOM 点击交互 (默认开启)
     clickIncludeUrl: true,   // 点击记录中是否携带页面 URL
     clickIncludeClass: true, // 点击记录中是否携带元素类名
+    includeErrors: true,     // 是否记录页面报错 (默认开启)
+    includeConsole: true,    // 是否记录控制台等级日志 (默认开启)
+    consoleLevels: {         // 默认只监听报错与警告
+      error: true,
+      warn: true,
+      info: false,
+      log: false
+    },
     showPanel: true,         // 是否显示面板
     isCollapsed: false       // 面板是否折叠
   };
@@ -63,6 +69,17 @@
     if (savedClickUrl !== null) state.clickIncludeUrl = savedClickUrl === 'true';
     const savedClickClass = localStorage.getItem('__trl_click_class');
     if (savedClickClass !== null) state.clickIncludeClass = savedClickClass === 'true';
+    
+    const savedIncludeErrors = localStorage.getItem('__trl_errors');
+    if (savedIncludeErrors !== null) state.includeErrors = savedIncludeErrors === 'true';
+    const savedIncludeConsole = localStorage.getItem('__trl_console');
+    if (savedIncludeConsole !== null) state.includeConsole = savedIncludeConsole === 'true';
+    const savedConsoleLevels = localStorage.getItem('__trl_console_levels');
+    if (savedConsoleLevels !== null) {
+      try {
+        state.consoleLevels = JSON.parse(savedConsoleLevels);
+      } catch (e) {}
+    }
   } catch (e) {
     console.error('[RequestLogger] 恢复配置失败:', e);
   }
@@ -206,6 +223,31 @@
         if (log.id) txt += `元素ID: ${log.id}\n`;
         if (log.className) txt += `类名: ${log.className}\n`;
         txt += `唯一 Selector 路径: ${log.selector}\n`;
+        if (log.tag) txt += `所属事项: ${log.tag}\n`;
+        txt += `------------------------------------------------------------\n\n`;
+      } else if (log.type === 'error') {
+        const timeStr = getFormattedTime(log.timestamp);
+        txt += `[报错 ${index + 1}] [JavaScript Error]  ${timeStr}\n`;
+        txt += `错误信息: ${log.message}\n`;
+        txt += `文件: ${log.filename} (Line ${log.lineno}, Col ${log.colno})\n`;
+        if (log.stack) {
+          txt += `堆栈:\n${log.stack}\n`;
+        }
+        if (log.tag) txt += `所属事项: ${log.tag}\n`;
+        txt += `------------------------------------------------------------\n\n`;
+      } else if (log.type === 'promise-error') {
+        const timeStr = getFormattedTime(log.timestamp);
+        txt += `[报错 ${index + 1}] [Promise Rejection]  ${timeStr}\n`;
+        txt += `错误信息: ${log.message}\n`;
+        if (log.stack) {
+          txt += `堆栈:\n${log.stack}\n`;
+        }
+        if (log.tag) txt += `所属事项: ${log.tag}\n`;
+        txt += `------------------------------------------------------------\n\n`;
+      } else if (log.type === 'console') {
+        const timeStr = getFormattedTime(log.timestamp);
+        txt += `[控制台 ${index + 1}] [Console ${log.level.toUpperCase()}]  ${timeStr}\n`;
+        txt += `内容: ${log.message}\n`;
         if (log.tag) txt += `所属事项: ${log.tag}\n`;
         txt += `------------------------------------------------------------\n\n`;
       } else if (log.type === 'request') {
@@ -457,8 +499,21 @@
       return;
     }
     
-    // 如果点击的是我们插件自身的控制面板、悬浮球或者 Toast 提示，直接忽略
-    if (e.target.closest('#brl-panel-container') || e.target.closest('#brl-toast')) {
+    // 向上回溯判断是否点击了我们插件面板内的任何元素（防范 detached DOM 或是 Text 节点等特殊边缘情况）
+    let cur = e.target;
+    let isPanelClick = false;
+    while (cur && cur !== document.body && cur !== document.documentElement) {
+      if (
+        cur.id === 'brl-panel-container' || 
+        cur.id === 'brl-toast' || 
+        (cur.className && typeof cur.className === 'string' && cur.className.includes('brl-'))
+      ) {
+        isPanelClick = true;
+        break;
+      }
+      cur = cur.parentNode;
+    }
+    if (isPanelClick) {
       return;
     }
 
@@ -485,7 +540,99 @@
     updateUIListCount();
   }, true); // 使用 Capture 捕获阶段，防止部分被 stopPropagation 的交互事件遗漏
 
-  // --- 6. 交互面板 UI 构建 ---
+  // --- 6. 监听全局 JS 运行时错误和 Promise Rejection 异常 ---
+  window.addEventListener('error', function (event) {
+    if (!state.isListening || !state.includeErrors) return;
+    // 排除资源加载错误（如图片/脚本加载失败，它们没有 event.error）
+    if (!event.error) return;
+
+    addLog({
+      type: 'error',
+      timestamp: Date.now(),
+      message: event.message || String(event.error),
+      filename: event.filename || '',
+      lineno: event.lineno || 0,
+      colno: event.colno || 0,
+      stack: event.error.stack || '',
+      tag: state.isTagActive ? state.currentTag : null
+    });
+  });
+
+  window.addEventListener('unhandledrejection', function (event) {
+    if (!state.isListening || !state.includeErrors) return;
+
+    const reason = event.reason;
+    const message = reason instanceof Error ? reason.message : String(reason);
+    const stack = reason instanceof Error ? reason.stack : '';
+
+    addLog({
+      type: 'promise-error',
+      timestamp: Date.now(),
+      message: `Unhandled Promise Rejection: ${message}`,
+      stack: stack,
+      tag: state.isTagActive ? state.currentTag : null
+    });
+  });
+
+  // --- 7. 拦截控制台等级日志 (Console Override) ---
+  const originalConsole = {
+    log: window.console.log,
+    info: window.console.info,
+    warn: window.console.warn,
+    error: window.console.error
+  };
+
+  ['log', 'info', 'warn', 'error'].forEach(level => {
+    window.console[level] = function (...args) {
+      // 保持原生的 console 输出不受影响
+      if (originalConsole[level]) {
+        originalConsole[level].apply(window.console, args);
+      }
+
+      if (!state.isListening || !state.includeConsole) return;
+      if (!state.consoleLevels[level]) return;
+
+      // 参数序列化和脱敏（敏感词过滤，例如 token, password 等，转换成 ***）
+      const formattedArgs = args.map(arg => {
+        if (arg === null) return 'null';
+        if (arg === undefined) return 'undefined';
+        if (arg instanceof Error) {
+          return `${arg.message}\n${arg.stack}`;
+        }
+        if (typeof arg === 'object') {
+          try {
+            const str = JSON.stringify(arg, (key, value) => {
+              if (key && typeof key === 'string') {
+                const lowerKey = key.toLowerCase();
+                if (lowerKey.includes('token') || lowerKey.includes('password') || lowerKey.includes('secret') || lowerKey.includes('auth')) {
+                  return '******';
+                }
+              }
+              return value;
+            });
+            return str;
+          } catch (e) {
+            return '[Object]';
+          }
+        }
+        
+        let strVal = String(arg);
+        const sensitiveRegex = /(token|password|secret|authorization|auth)=[^&?\s]+/ig;
+        strVal = strVal.replace(sensitiveRegex, '$1=******');
+        return strVal;
+      }).join(' ');
+
+      addLog({
+        type: 'console',
+        level: level,
+        timestamp: Date.now(),
+        message: formattedArgs.slice(0, 1500), // 限制长度，防止日志超大
+        tag: state.isTagActive ? state.currentTag : null
+      });
+    };
+  });
+
+  // --- 8. 交互面板 UI 构建 ---
   const styleText = `
     #brl-panel-container {
       position: fixed;
@@ -960,6 +1107,7 @@
     }
     
     .brl-log-row {
+      position: relative;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -970,10 +1118,52 @@
       border-left: 3px solid #10b981;
       cursor: pointer;
       transition: background 0.15s;
+      overflow: hidden;
     }
     
     .brl-log-row:hover {
       background: rgba(255, 255, 255, 0.08);
+    }
+
+    /* 悬浮操作区容器 */
+    .brl-log-actions {
+      display: none;
+      position: absolute;
+      right: 4px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(20, 20, 20, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+      padding: 2px 4px;
+      align-items: center;
+      gap: 4px;
+      box-shadow: -2px 0 8px rgba(0,0,0,0.5);
+      z-index: 5;
+    }
+
+    .brl-log-row:hover .brl-log-actions {
+      display: flex;
+    }
+
+    .brl-action-icon {
+      font-size: 10px;
+      padding: 2px;
+      cursor: pointer;
+      border-radius: 3px;
+      transition: background 0.15s, transform 0.1s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brl-action-icon:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: scale(1.1);
+    }
+
+    .brl-action-icon.delete-btn:hover {
+      background: rgba(239, 68, 68, 0.25);
     }
     
     .brl-log-row.status-err {
@@ -1066,7 +1256,7 @@
   `;
 
   // 声明所有全局 UI 变量，以便外层函数访问
-  let panel, indicator, btnToggleListen, btnClear, btnExport, btnCollapse, inputFilter, inputTag, btnActionTag, tagStatusBar, tagStatusText, cbHeaders, cbClicks, cbClickUrl, cbClickClass, statusText, statusDot, miniCount, header, previewList;
+  let panel, indicator, btnToggleListen, btnClear, btnExport, btnCollapse, inputFilter, inputTag, btnActionTag, tagStatusBar, tagStatusText, cbHeaders, cbClicks, cbClickUrl, cbClickClass, cbErrors, cbConsole, cbConsoleLog, cbConsoleInfo, cbConsoleWarn, cbConsoleError, statusText, statusDot, miniCount, header, previewList;
 
   // 精致 Toast 弹窗
   function showToast(message) {
@@ -1082,21 +1272,62 @@
   // 更新已捕获请求数与实时预览列表
   function updateUIListCount() {
     if (!btnClear || !miniCount) return;
-    // 仅计数网络请求
-    const reqCount = state.logs.filter(l => l.type === 'request').length;
-    btnClear.textContent = `🗑 清空数据 (${reqCount})`;
-    miniCount.textContent = reqCount;
+    // 计数：网络请求、报错以及控制台日志的总和
+    const totalCount = state.logs.filter(l => l.type === 'request' || l.type === 'error' || l.type === 'promise-error' || l.type === 'console').length;
+    btnClear.textContent = `🗑 清空数据 (${totalCount})`;
+    miniCount.textContent = totalCount;
 
-    // 重新渲染最近的 6 条日志（包括打标、网络请求和 DOM 点击）
+    // 悬浮操作辅助函数
+    function addHoverActions(row, originalIndex, getDetailContent) {
+      const actionsDiv = document.createElement('div');
+      actionsDiv.className = 'brl-log-actions';
+      
+      const copyBtn = document.createElement('div');
+      copyBtn.className = 'brl-action-icon';
+      copyBtn.title = '复制详情';
+      copyBtn.innerHTML = '📋';
+      
+      const deleteBtn = document.createElement('div');
+      deleteBtn.className = 'brl-action-icon delete-btn';
+      deleteBtn.title = '删除此条记录';
+      deleteBtn.innerHTML = '🗑️';
+      
+      actionsDiv.appendChild(copyBtn);
+      actionsDiv.appendChild(deleteBtn);
+      row.appendChild(actionsDiv);
+
+      copyBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const detail = getDetailContent();
+        navigator.clipboard.writeText(detail).then(() => {
+          showToast('已复制详情到剪贴板！');
+        }).catch(err => {
+          console.error('复制失败:', err);
+          showToast('复制失败，请重试');
+        });
+      });
+
+      deleteBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        state.logs.splice(originalIndex, 1);
+        updateUIListCount();
+      });
+    }
+
+    // 重新渲染最近的 6 条日志（包括打标、网络请求、DOM 点击、报错和控制台日志）
     if (previewList) {
-      const displayLogs = state.logs.slice(-6);
+      // 记录在 state.logs 中的原始索引并取最近 6 条
+      const displayLogs = state.logs
+        .map((log, index) => ({ log, index }))
+        .slice(-6);
+
       if (displayLogs.length === 0) {
         previewList.innerHTML = `<div style="text-align: center; color: #666; padding: 12px; font-size: 11px; font-style: italic;">暂无符合条件的请求</div>`;
         return;
       }
 
       previewList.innerHTML = '';
-      displayLogs.forEach(log => {
+      displayLogs.forEach(({ log, index: originalIndex }) => {
         const row = document.createElement('div');
         row.className = 'brl-log-row';
 
@@ -1112,17 +1343,16 @@
           const textExcerpt = log.innerText ? ` "${log.innerText.slice(0, 14)}"` : '';
 
           row.innerHTML = `
-            <div style="flex: 1; text-align: left; font-size: 11px; display: flex; align-items: center; gap: 6px;">
+            <div style="flex: 1; text-align: left; font-size: 11px; display: flex; align-items: center; gap: 6px; padding-right: 46px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
               <span>🖱️</span>
-              <span style="font-weight: bold; color: #10b981; font-family: monospace; background: rgba(16, 185, 129, 0.15); padding: 1px 3px; border-radius: 3px; font-size: 9px;">CLICK</span>
-              <span style="color: #ccc; font-family: monospace;">${elementDesc}${textExcerpt}</span>
+              <span style="font-weight: bold; color: #10b981; font-family: monospace; background: rgba(16, 185, 129, 0.15); padding: 1px 3px; border-radius: 3px; font-size: 9px; flex-shrink: 0;">CLICK</span>
+              <span style="color: #ccc; font-family: monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${elementDesc}${textExcerpt}</span>
             </div>
-            <span style="font-size: 10px; color: #666; font-family: monospace;">${timeStr}</span>
+            <span style="font-size: 10px; color: #666; font-family: monospace; flex-shrink: 0;">${timeStr}</span>
           `;
 
           // 点击单条点击记录复制元素详情
-          row.addEventListener('click', (e) => {
-            e.stopPropagation();
+          const getClickDetail = () => {
             let detail = `=========================================\n`;
             detail += `交互事件: 点击页面元素 (CLICK)\n`;
             if (log.url) detail += `页面地址: ${log.url}\n`;
@@ -1134,14 +1364,116 @@
             detail += `时间: ${getFormattedTime(log.timestamp)}\n`;
             if (log.tag) detail += `所属事项: ${log.tag}\n`;
             detail += `=========================================\n`;
+            return detail;
+          };
 
-            navigator.clipboard.writeText(detail).then(() => {
+          row.addEventListener('click', (e) => {
+            e.stopPropagation();
+            navigator.clipboard.writeText(getClickDetail()).then(() => {
               showToast('已复制 DOM 交互详情到剪贴板！');
             }).catch(err => {
               console.error('复制失败:', err);
               showToast('复制失败，请重试');
             });
           });
+
+          addHoverActions(row, originalIndex, getClickDetail);
+        } else if (log.type === 'error' || log.type === 'promise-error') {
+          row.classList.add('status-err');
+          const timeStr = new Date(log.timestamp).toLocaleTimeString();
+          const errType = log.type === 'error' ? 'JS ERROR' : 'PROMISE ERR';
+          const shortMsg = log.message.length > 25 ? log.message.slice(0, 22) + '...' : log.message;
+
+          row.innerHTML = `
+            <div style="flex: 1; text-align: left; font-size: 11px; display: flex; align-items: center; gap: 6px; padding-right: 46px; overflow: hidden;">
+              <span>🚫</span>
+              <span style="font-weight: bold; color: #ef4444; font-family: monospace; background: rgba(239, 68, 68, 0.15); padding: 1px 3px; border-radius: 3px; font-size: 9px; flex-shrink: 0;">${errType}</span>
+              <span style="color: #fca5a5; font-family: monospace; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;" title="${log.message}">${shortMsg}</span>
+            </div>
+            <span style="font-size: 10px; color: #888; font-family: monospace; margin-left: 4px; flex-shrink: 0;">${timeStr}</span>
+          `;
+
+          const getErrorDetail = () => {
+            let detail = `=========================================\n`;
+            detail += `异常类型: ${log.type === 'error' ? 'JavaScript 运行时错误' : '未捕获 Promise 异常'}\n`;
+            detail += `错误内容: ${log.message}\n`;
+            if (log.type === 'error') {
+              detail += `发生文件: ${log.filename}\n`;
+              detail += `行列信息: 行 ${log.lineno}, 列 ${log.colno}\n`;
+            }
+            if (log.stack) {
+              detail += `\n堆栈轨迹 (Stack Trace):\n${log.stack}\n`;
+            }
+            detail += `时间: ${getFormattedTime(log.timestamp)}\n`;
+            if (log.tag) detail += `所属事项: ${log.tag}\n`;
+            detail += `=========================================\n`;
+            return detail;
+          };
+
+          row.addEventListener('click', (e) => {
+            e.stopPropagation();
+            navigator.clipboard.writeText(getErrorDetail()).then(() => {
+              showToast('已复制报错详情与堆栈！');
+            }).catch(err => {
+              console.error('复制失败:', err);
+              showToast('复制失败，请重试');
+            });
+          });
+
+          addHoverActions(row, originalIndex, getErrorDetail);
+        } else if (log.type === 'console') {
+          let levelColor = '#ccc';
+          let levelBg = 'rgba(255, 255, 255, 0.1)';
+          let icon = '💬';
+          if (log.level === 'error') {
+            row.classList.add('status-err');
+            levelColor = '#ef4444';
+            levelBg = 'rgba(239, 68, 68, 0.15)';
+            icon = '🔴';
+          } else if (log.level === 'warn') {
+            row.classList.add('status-warn');
+            levelColor = '#fbbf24';
+            levelBg = 'rgba(245, 158, 11, 0.15)';
+            icon = '🟡';
+          } else if (log.level === 'info') {
+            levelColor = '#60a5fa';
+            levelBg = 'rgba(59, 130, 246, 0.15)';
+            icon = '🔵';
+          }
+
+          const timeStr = new Date(log.timestamp).toLocaleTimeString();
+          const shortMsg = log.message.length > 25 ? log.message.slice(0, 22) + '...' : log.message;
+
+          row.innerHTML = `
+            <div style="flex: 1; text-align: left; font-size: 11px; display: flex; align-items: center; gap: 6px; padding-right: 46px; overflow: hidden;">
+              <span>${icon}</span>
+              <span style="font-weight: bold; color: ${levelColor}; font-family: monospace; background: ${levelBg}; padding: 1px 3px; border-radius: 3px; font-size: 9px; flex-shrink: 0;">${log.level.toUpperCase()}</span>
+              <span style="color: #ccc; font-family: monospace; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;" title="${log.message}">${shortMsg}</span>
+            </div>
+            <span style="font-size: 10px; color: #888; font-family: monospace; margin-left: 4px; flex-shrink: 0;">${timeStr}</span>
+          `;
+
+          const getConsoleDetail = () => {
+            let detail = `=========================================\n`;
+            detail += `日志来源: 控制台输出 (Console.${log.level})\n`;
+            detail += `日志内容: ${log.message}\n`;
+            detail += `时间: ${getFormattedTime(log.timestamp)}\n`;
+            if (log.tag) detail += `所属事项: ${log.tag}\n`;
+            detail += `=========================================\n`;
+            return detail;
+          };
+
+          row.addEventListener('click', (e) => {
+            e.stopPropagation();
+            navigator.clipboard.writeText(getConsoleDetail()).then(() => {
+              showToast('已复制控制台日志内容！');
+            }).catch(err => {
+              console.error('复制失败:', err);
+              showToast('复制失败，请重试');
+            });
+          });
+
+          addHoverActions(row, originalIndex, getConsoleDetail);
         } else {
           // 网络请求类型的渲染
           const isErr = log.status === 'FAILED' || log.status >= 400 || log.status === 0;
@@ -1167,16 +1499,14 @@
 
           row.innerHTML = `
             <span class="brl-log-method ${methodClass}">${log.method}</span>
-            <span class="brl-log-path" title="${log.url}">${displayPath}</span>
+            <span class="brl-log-path" title="${log.url}" style="padding-right: 46px;">${displayPath}</span>
             <div class="brl-log-meta">
               <span style="font-weight: bold; color: ${isErr ? '#f87171' : '#10b981'}">${log.status}</span>
               <span class="brl-log-duration">${durationText}</span>
             </div>
           `;
 
-          // 点击单条请求复制详情
-          row.addEventListener('click', (e) => {
-            e.stopPropagation();
+          const getRequestDetail = () => {
             let detail = `=========================================\n`;
             detail += `请求方式: ${log.method}\n`;
             detail += `请求 URL: ${log.url}\n`;
@@ -1200,14 +1530,21 @@
             detail += `\n\n响应 Response:\n`;
             detail += tryFormatJson(log.resBody) || '(空)';
             detail += `\n=========================================\n`;
+            return detail;
+          };
 
-            navigator.clipboard.writeText(detail).then(() => {
+          // 点击单条请求复制详情
+          row.addEventListener('click', (e) => {
+            e.stopPropagation();
+            navigator.clipboard.writeText(getRequestDetail()).then(() => {
               showToast('已复制该请求到剪贴板！');
             }).catch(err => {
               console.error('复制失败:', err);
               showToast('复制失败，请重试');
             });
           });
+
+          addHoverActions(row, originalIndex, getRequestDetail);
         }
         previewList.appendChild(row);
       });
@@ -1286,7 +1623,7 @@
             </div>
 
             <div class="brl-btn-row">
-              <button class="brl-btn" id="brl-btn-action-tag">🏷 开始事项</button>
+              <button class="brl-btn" id="brl-btn-action-tag">⏺ 开始事项</button>
             </div>
 
             <!-- 当前事项状态条 -->
@@ -1377,6 +1714,51 @@
                 </div>
               </div>
 
+              <!-- 卡片 3: 异常与控制台日志追踪 -->
+              <div class="brl-settings-card">
+                <div class="brl-settings-card-header">
+                  <span class="brl-settings-card-title">异常与控制台追踪</span>
+                </div>
+                
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px; border-top: 1px dashed rgba(255,255,255,0.08); padding-top: 8px;">
+                  <label class="brl-custom-cb">
+                    <input type="checkbox" id="brl-cb-errors" ${state.includeErrors ? 'checked' : ''} />
+                    <span class="brl-checkbox-box"></span>
+                    <span style="color: #f87171; font-weight: 500;">记录未捕获页面报错</span>
+                  </label>
+                  
+                  <label class="brl-custom-cb" style="margin-top: 4px;">
+                    <input type="checkbox" id="brl-cb-console" ${state.includeConsole ? 'checked' : ''} />
+                    <span class="brl-checkbox-box"></span>
+                    <span style="color: #93c5fd; font-weight: 500;">记录控制台等级日志</span>
+                  </label>
+                  
+                  <!-- 控制台等级细分选择 -->
+                  <div id="brl-console-sub-sec" style="${state.includeConsole ? 'display: flex;' : 'display: none;'} flex-direction: column; gap: 8px; margin-left: 20px; border-left: 2px solid rgba(255,255,255,0.08); padding-left: 10px;">
+                    <label class="brl-custom-cb">
+                      <input type="checkbox" id="brl-cb-console-error" ${state.consoleLevels.error ? 'checked' : ''} />
+                      <span class="brl-checkbox-box"></span>
+                      <span style="color: #ef4444; font-size: 11px;">Error 🔴</span>
+                    </label>
+                    <label class="brl-custom-cb">
+                      <input type="checkbox" id="brl-cb-console-warn" ${state.consoleLevels.warn ? 'checked' : ''} />
+                      <span class="brl-checkbox-box"></span>
+                      <span style="color: #fbbf24; font-size: 11px;">Warn 🟡</span>
+                    </label>
+                    <label class="brl-custom-cb">
+                      <input type="checkbox" id="brl-cb-console-info" ${state.consoleLevels.info ? 'checked' : ''} />
+                      <span class="brl-checkbox-box"></span>
+                      <span style="color: #60a5fa; font-size: 11px;">Info 🔵</span>
+                    </label>
+                    <label class="brl-custom-cb">
+                      <input type="checkbox" id="brl-cb-console-log" ${state.consoleLevels.log ? 'checked' : ''} />
+                      <span class="brl-checkbox-box"></span>
+                      <span style="color: #ccc; font-size: 11px;">Log ⚪</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
 
@@ -1404,6 +1786,13 @@
     cbClicks = document.getElementById('brl-cb-clicks');
     cbClickUrl = document.getElementById('brl-cb-click-url');
     cbClickClass = document.getElementById('brl-cb-click-class');
+    cbErrors = document.getElementById('brl-cb-errors');
+    cbConsole = document.getElementById('brl-cb-console');
+    cbConsoleError = document.getElementById('brl-cb-console-error');
+    cbConsoleWarn = document.getElementById('brl-cb-console-warn');
+    cbConsoleInfo = document.getElementById('brl-cb-console-info');
+    cbConsoleLog = document.getElementById('brl-cb-console-log');
+    const consoleSubSec = document.getElementById('brl-console-sub-sec');
     statusText = document.getElementById('brl-status-text');
     statusDot = document.getElementById('brl-status-dot');
     miniCount = document.getElementById('brl-mini-count');
@@ -1507,6 +1896,33 @@
       localStorage.setItem('__trl_click_class', state.clickIncludeClass ? 'true' : 'false');
     });
 
+    // 绑定页面报错选项变更事件
+    cbErrors.addEventListener('change', () => {
+      state.includeErrors = cbErrors.checked;
+      localStorage.setItem('__trl_errors', state.includeErrors ? 'true' : 'false');
+    });
+
+    // 绑定控制台日志选项变更事件（以及展开/收起细分选择）
+    cbConsole.addEventListener('change', () => {
+      state.includeConsole = cbConsole.checked;
+      localStorage.setItem('__trl_console', state.includeConsole ? 'true' : 'false');
+      consoleSubSec.style.display = state.includeConsole ? 'flex' : 'none';
+    });
+
+    // 绑定控制台等级细分多选框变更事件
+    const updateConsoleLevels = () => {
+      state.consoleLevels.error = cbConsoleError.checked;
+      state.consoleLevels.warn = cbConsoleWarn.checked;
+      state.consoleLevels.info = cbConsoleInfo.checked;
+      state.consoleLevels.log = cbConsoleLog.checked;
+      localStorage.setItem('__trl_console_levels', JSON.stringify(state.consoleLevels));
+    };
+
+    cbConsoleError.addEventListener('change', updateConsoleLevels);
+    cbConsoleWarn.addEventListener('change', updateConsoleLevels);
+    cbConsoleInfo.addEventListener('change', updateConsoleLevels);
+    cbConsoleLog.addEventListener('change', updateConsoleLevels);
+
     inputHeadersKeep.addEventListener('input', () => {
       state.headersKeepPattern = inputHeadersKeep.value.trim();
       localStorage.setItem('__trl_headers_keep', state.headersKeepPattern);
@@ -1561,7 +1977,7 @@
         state.isTagActive = false;
         state.currentTag = '';
         
-        btnActionTag.textContent = `🏷 开始事项`;
+        btnActionTag.textContent = `⏺ 开始事项`;
         btnActionTag.classList.remove('active-tag');
         tagStatusBar.style.display = 'none';
         inputTag.disabled = false;
